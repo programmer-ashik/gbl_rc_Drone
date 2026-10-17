@@ -1,0 +1,36 @@
+---
+description: "Error handling and logging standards"
+alwaysApply: true
+---
+
+# Error Handling Standards
+
+## Central Error Handler
+
+```typescript
+// src/middlewares/error-handler.ts
+import { Request, Response, NextFunction } from "express";
+import { ApiError } from "../utils/api-error.js";
+import logger from "../config/logger.js";
+
+export const errorHandler = (
+  err: Error,
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  if (err instanceof ApiError) {
+    return res.status(err.statusCode).json({
+      success: false,
+      message: err.message,
+      code: err.code,
+    });
+  }
+
+  logger.error(err.stack || err.message);
+  res.status(500).json({
+    success: false,
+    message: "Internal Server Error",
+  });
+};
+```

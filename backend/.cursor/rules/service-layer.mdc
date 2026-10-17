@@ -1,0 +1,63 @@
+---
+
+### 4. `.cursor/rules/service-layer.mdc`
+
+```markdown
+---
+
+description: "Service layer business logic standards"
+globs: "src/services/\*_/_.ts"
+alwaysApply: false
+
+---
+
+# Service Layer Standards
+
+## Service Structure Template
+
+```typescript
+import { ProductRepository } from "../repositories/product.repository.js";
+import { ApiError } from "../utils/api-error.js";
+import mongoose from "mongoose";
+
+export class ProductService {
+  constructor(private productRepo: ProductRepository) {}
+
+  async getProductById(id: string) {
+    const product = await this.productRepo.findById(id);
+    if (!product) {
+      throw new ApiError(404, "Product not found");
+    }
+    return product;
+  }
+
+  async createProduct(data: any) {
+    // Business logic validation
+    if (data.price < 0) {
+      throw new ApiError(400, "Price cannot be negative");
+    }
+    return this.productRepo.create(data);
+  }
+
+  async updateStock(
+    productId: string,
+    quantity: number,
+    session?: mongoose.ClientSession,
+  ) {
+    const product = await this.productRepo.findById(productId);
+    if (!product) throw new ApiError(404, "Product not found");
+
+    if (product.stock < quantity) {
+      throw new ApiError(400, "Insufficient stock");
+    }
+
+    return this.productRepo.update(
+      productId,
+      {
+        $inc: { stock: -quantity },
+      },
+      { session },
+    );
+  }
+}
+```

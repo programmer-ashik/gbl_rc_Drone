@@ -1,0 +1,67 @@
+---
+
+### 5. `.cursor/rules/controller-routes.mdc`
+
+```markdown
+---
+
+description: "Controller and routing standards"
+globs: "src/controllers/**/\*.ts, src/routes/**/\*.ts"
+alwaysApply: false
+
+---
+
+# Controller & Routing Standards
+
+## Controller Structure
+
+```typescript
+// src/controllers/product.controller.ts
+import { Request, Response } from "express";
+import { ProductService } from "../services/product.service.js";
+import { asyncHandler } from "../utils/async-handler.js";
+import {
+  createProductSchema,
+  updateProductSchema,
+} from "../validations/product.validation.js";
+
+export class ProductController {
+  constructor(private productService: ProductService) {}
+
+  getAllProducts = asyncHandler(async (req: Request, res: Response) => {
+    const { page = 1, limit = 10, category, search } = req.query;
+    const products = await this.productService.getAllProducts({
+      page: Number(page),
+      limit: Number(limit),
+      category: category as string,
+      search: search as string,
+    });
+    res.status(200).json({ success: true, data: products });
+  });
+
+  getProductById = asyncHandler(async (req: Request, res: Response) => {
+    const product = await this.productService.getProductById(req.params.id);
+    res.status(200).json({ success: true, data: product });
+  });
+
+  createProduct = asyncHandler(async (req: Request, res: Response) => {
+    const validated = createProductSchema.parse(req.body);
+    const product = await this.productService.createProduct(validated);
+    res.status(201).json({ success: true, data: product });
+  });
+
+  updateProduct = asyncHandler(async (req: Request, res: Response) => {
+    const validated = updateProductSchema.parse(req.body);
+    const product = await this.productService.updateProduct(
+      req.params.id,
+      validated,
+    );
+    res.status(200).json({ success: true, data: product });
+  });
+
+  deleteProduct = asyncHandler(async (req: Request, res: Response) => {
+    await this.productService.deleteProduct(req.params.id);
+    res.status(204).json({ success: true });
+  });
+}
+```

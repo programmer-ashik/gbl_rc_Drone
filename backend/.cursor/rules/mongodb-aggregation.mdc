@@ -1,0 +1,96 @@
+---
+
+### 7. `.cursor/rules/mongodb-aggregation.mdc`
+
+```markdown
+---
+
+description: "MongoDB aggregation pipeline best practices"
+globs: "src/repositories/\*_/_.ts"
+alwaysApply: false
+
+---
+
+# MongoDB Aggregation Standards
+
+## Aggregation Pipeline Template
+
+```typescript
+// src/repositories/product.repository.ts
+import { Types } from 'mongoose';
+
+async getProductsWithAggregation(filter: any, options: any) {
+  const pipeline = [];
+
+  // Stage 1: Filter (ALWAYS first for index usage)
+  if (filter.category) {
+    pipeline.push({
+      $match: {
+        category: new Types.ObjectId(filter.category),
+        isActive: true
+      }
+    });
+  }
+
+  // Stage 2: Lookup - Join with related collections
+  pipeline.push({
+    $lookup: {
+      from: 'categories',
+      localField: 'category',
+      foreignField: '_id',
+      as: 'categoryData'
+    }
+  });
+
+  // Stage 3: Unwind (with preserve for empty arrays)
+  pipeline.push({
+    $unwind: {
+      path: '$categoryData',
+      preserveNullAndEmptyArrays: true
+    }
+  });
+
+  // Stage 4: Project - Select only needed fields
+  pipeline.push({
+    $project: {
+      _id: 1,
+      name: 1,
+      price: 1,
+      stock: 1,
+      variants: 1,
+      categoryName: '$categoryData.name',
+      averageRating: 1,
+      totalSales: 1
+    }
+  });
+
+  // Stage 5: Sort
+  if (options.sort) {
+    pipeline.push({ $sort: options.sort });
+  }
+
+  // Stage 6: Pagination
+  if (options.skip) {
+    pipeline.push({ $skip: options.skip });
+  }
+  if (options.limit) {
+    pipeline.push({ $limit: options.limit });
+  }
+
+  // Execute with facet for total count
+  const results = await this.model.aggregate([
+    ...pipeline,
+    {
+      $facet: {
+        data: [],
+        total: [{ $count: 'count' }]
+      }
+    }
+  ]);
+
+  return {
+    data: results[0]?.data || [],
+    total: results[0]?.total[0]?.count || 0
+  };
+}
+```

@@ -1,0 +1,68 @@
+---
+
+### 3. `.cursor/rules/repository-pattern.mdc`
+
+```markdown
+---
+
+description: "Repository pattern standards for MongoDB operations"
+globs: "src/repositories/\*_/_.ts"
+alwaysApply: false
+
+---
+
+# Repository Pattern Standards
+
+## Repository Structure Template
+
+```typescript
+import { Model, FilterQuery, UpdateQuery } from "mongoose";
+import { IProduct } from "../models/product.model.js";
+
+export class ProductRepository {
+  constructor(private model: Model<IProduct>) {}
+
+  async findById(id: string): Promise<IProduct | null> {
+    return this.model.findById(id).lean();
+  }
+
+  async findOne(filter: FilterQuery<IProduct>): Promise<IProduct | null> {
+    return this.model.findOne(filter).lean();
+  }
+
+  async findAll(
+    filter: FilterQuery<IProduct> = {},
+    options: any = {},
+  ): Promise<IProduct[]> {
+    const query = this.model.find(filter);
+    if (options.sort) query.sort(options.sort);
+    if (options.limit) query.limit(options.limit);
+    if (options.skip) query.skip(options.skip);
+    return query.lean();
+  }
+
+  async create(data: Partial<IProduct>): Promise<IProduct> {
+    const doc = await this.model.create(data);
+    return doc.toObject();
+  }
+
+  async update(
+    id: string,
+    data: UpdateQuery<IProduct>,
+  ): Promise<IProduct | null> {
+    return this.model.findByIdAndUpdate(id, data, { new: true }).lean();
+  }
+
+  async delete(id: string): Promise<IProduct | null> {
+    return this.model.findByIdAndDelete(id).lean();
+  }
+
+  async count(filter: FilterQuery<IProduct> = {}): Promise<number> {
+    return this.model.countDocuments(filter);
+  }
+
+  async exists(filter: FilterQuery<IProduct>): Promise<boolean> {
+    return this.model.exists(filter) !== null;
+  }
+}
+```

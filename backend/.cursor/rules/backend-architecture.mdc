@@ -1,0 +1,34 @@
+---
+description: "Core backend architecture and folder structure guidelines"
+alwaysApply: true
+---
+
+# Backend Architecture Standards
+
+## Project Structure (MUST FOLLOW)
+
+- **config/** → Environment variables, database connection
+- **controllers/** → Request handler, validation call, service call
+- **routes/** → Route definition, controller mapping
+- **services/** → Business logic, external API calls
+- **repositories/** → Database operations (MongoDB queries)
+- **models/** → Mongoose schema definitions
+- **validations/** → Zod schemas
+- **middlewares/** → Auth, error handler, logger
+- **utils/** → Reusable helper functions
+- **jobs/** → Cron jobs, scheduled tasks
+- **types/** → TypeScript type definitions
+
+## Layer Rules (MUST FOLLOW)
+
+1. **Route → Controller → Service → Repository → Model** flow
+2. Controllers: Request handling, validation, response formatting
+3. Services: Business logic, transaction management, external API calls
+4. Repositories: Pure database operations (MongoDB queries)
+5. Models: Schema definitions, instance methods, statics
+
+## Import Conventions
+
+- Use ES Modules ("type": "module")
+- Use .js extension in imports (TypeScript compiles to .js)
+- Example: `import { userService } from '../services/user.service.js'`

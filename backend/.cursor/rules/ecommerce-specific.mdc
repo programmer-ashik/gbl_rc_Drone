@@ -1,0 +1,93 @@
+---
+
+### 8. `.cursor/rules/ecommerce-specific.mdc`
+
+```markdown
+---
+
+description: "E-commerce specific business logic rules"
+globs: "src/\*_/_.ts"
+alwaysApply: false
+
+---
+
+# E-Commerce Specific Standards
+
+## Product Model with Variants
+
+```typescript
+// src/models/product.model.ts
+import mongoose, { Schema, Document } from "mongoose";
+
+export interface IProductVariant {
+  size: "S" | "M" | "L" | "XL" | "ONE";
+  color: string;
+  stock: number;
+  price: number;
+  sku: string;
+  images?: string[];
+}
+
+export interface IProduct extends Document {
+  name: string;
+  description: string;
+  category: mongoose.Types.ObjectId;
+  basePrice: number;
+  variants: IProductVariant[];
+  images: string[];
+  averageRating: number;
+  totalReviews: number;
+  isActive: boolean;
+  translations: {
+    en: { name: string; description: string };
+    es: { name: string; description: string };
+  };
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+const productSchema = new Schema<IProduct>(
+  {
+    name: { type: String, required: true },
+    description: { type: String },
+    category: { type: Schema.Types.ObjectId, ref: "Category", required: true },
+    basePrice: { type: Number, required: true },
+    variants: [
+      {
+        size: {
+          type: String,
+          enum: ["S", "M", "L", "XL", "ONE"],
+          required: true,
+        },
+        color: { type: String, required: true },
+        stock: { type: Number, required: true, min: 0 },
+        price: { type: Number, required: true },
+        sku: { type: String, required: true, unique: true },
+        images: [{ type: String }],
+      },
+    ],
+    images: [{ type: String }],
+    averageRating: { type: Number, default: 0 },
+    totalReviews: { type: Number, default: 0 },
+    isActive: { type: Boolean, default: true },
+    translations: {
+      en: {
+        name: { type: String },
+        description: { type: String },
+      },
+      es: {
+        name: { type: String },
+        description: { type: String },
+      },
+    },
+  },
+  { timestamps: true },
+);
+
+// Indexes for performance
+productSchema.index({ name: "text", "translations.en.name": "text" });
+productSchema.index({ category: 1, isActive: 1 });
+productSchema.index({ "variants.sku": 1 }, { unique: true });
+
+export const Product = mongoose.model<IProduct>("Product", productSchema);
+```

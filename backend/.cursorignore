@@ -1,0 +1,124 @@
+# Dependencies
+node_modules/
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+
+# Build outputs
+/build/
+/dist/
+/.next/
+/out/
+/public/build/
+/*.min.js
+/*.bundle.js
+
+# Environment files
+.env
+.env.local
+.env.production
+.env.development
+*.env
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+logs/
+*.pid
+*.seed
+
+# OS files
+.DS_Store
+Thumbs.db
+desktop.ini
+*.swp
+*.swo
+*~
+
+# IDE files
+.vscode/
+.idea/
+*.iml
+*.sublime-project
+*.sublime-workspace
+.code-workspace
+/.vs/
+
+# Temporary files
+/tmp/
+/temp/
+*.tmp
+*.temp
+*.cache
+.cache/
+
+# Uploads
+/uploads/
+/uploads/*.jpg
+/uploads/*.png
+/uploads/*.pdf
+/files/
+/media/
+
+# Coverage reports
+/coverage/
+.nyc_output/
+
+# Backup files
+*.backup
+*.bak
+*.old
+*.orig
+
+# Database files
+*.db
+*.sqlite
+*.sqlite3
+*.mongodb
+
+# Certificate files
+*.pem
+*.crt
+*.key
+*.p12
+
+# Docker
+docker-compose.override.yml
+.dockerignore
+
+# Misc
+*.tgz
+*.zip
+*.rar
+*.7z
+*.gz
+*.tar
+
+# Secret files
+*secret*
+*key*
+*password*
+*credential*
+
+# AI generated files
+*.ai.*
+.cursor/
+.continue/
+
+# Git
+.git/
+.gitignore
+.gitattributes
+
+# Node
+*.node
+
+# System
+*.pid
+*.seed
+
+# User specific files
+*.local
+.vscode-test/

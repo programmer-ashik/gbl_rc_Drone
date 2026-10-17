@@ -1,0 +1,70 @@
+---
+
+### 10. NEW: `.cursor/rules/abandoned-cart.mdc`
+
+```markdown
+---
+
+description: "Abandoned cart and email automation"
+globs: "src/services/cart/**/\*.ts, src/jobs/**/\*.ts"
+alwaysApply: false
+
+---
+
+# Abandoned Cart Email Automation
+
+## Cart Service with Abandonment Tracking
+
+```typescript
+// src/services/cart.service.ts
+import { CartRepository } from "../repositories/cart.repository.js";
+import { ProductRepository } from "../repositories/product.repository.js";
+import { emailService } from "../services/email.service.js";
+
+export class CartService {
+  constructor(
+    private cartRepo: CartRepository,
+    private productRepo: ProductRepository,
+  ) {}
+
+  async addToCart(
+    userId: string,
+    productId: string,
+    variant: any,
+    quantity: number,
+  ) {
+    // Check stock first
+    const product = await this.productRepo.findById(productId);
+    const variantData = product?.variants.find((v) => v.sku === variant.sku);
+    if (!variantData || variantData.stock < quantity) {
+      throw new ApiError(400, "Insufficient stock");
+    }
+
+    // Add to cart
+    const cart = await this.cartRepo.addItem(userId, {
+      product: productId,
+      variant,
+      quantity,
+      price: variantData.price,
+    });
+
+    // Update last activity
+    await this.cartRepo.updateLastActivity(cart._id);
+
+    return cart;
+  }
+
+  async getAbandonedCarts(hours: number = 6) {
+    const cutoffTime = new Date();
+    cutoffTime.setHours(cutoffTime.getHours() - hours);
+
+    return this.cartRepo
+      .find({
+        lastActivity: { $lt: cutoffTime },
+        isAbandoned: false,
+        "items.0": { $exists: true }, // Non-empty cart
+      })
+      .populate("items.product");
+  }
+}
+```

@@ -1,0 +1,227 @@
+{
+  "projectType": "mern-stack",
+  "projectName": "gblrcdrone-rc-ecommerce",
+  "description": "RC Drone and Robot Accessories E-commerce Platform",
+  "rules": {
+    "codeStyle": {
+      "indentation": 2,
+      "quoteStyle": "single",
+      "semicolons": true,
+      "trailingComma": "es5",
+      "lineWidth": 100,
+      "jsxSingleQuote": true,
+      "bracketSpacing": true,
+      "arrowParens": "always"
+    },
+    "namingConventions": {
+      "components": "PascalCase",
+      "hooks": "camelCase",
+      "utils": "camelCase",
+      "models": "PascalCase",
+      "controllers": "camelCase",
+      "routes": "camelCase",
+      "files": "kebab-case",
+      "folders": "kebab-case",
+      "constants": "UPPER_SNAKE_CASE",
+      "envVariables": "UPPER_SNAKE_CASE",
+      "apiEndpoints": "kebab-case"
+    },
+    "componentStructure": {
+      "eachComponentShouldHave": [
+        "index.jsx",
+        "componentName.module.css"
+      ],
+      "exportDefault": true,
+      "useFunctionalComponents": true,
+      "useHooks": true
+    },
+    "fileStructure": {
+      "backend": {
+        "models": "/backend/src/models/",
+        "controllers": "/backend/src/controllers/",
+        "routes": "/backend/src/routes/",
+        "middleware": "/backend/src/middleware/",
+        "services": "/backend/src/services/",
+        "config": "/backend/src/config/",
+        "utils": "/backend/src/utils/",
+        "validators": "/backend/src/validators/"
+      },
+      "frontend": {
+        "components": "/src/components/",
+        "pages": "/src/pages/",
+        "hooks": "/src/hooks/",
+        "redux": "/src/redux/",
+        "services": "/src/services/",
+        "utils": "/src/utils/",
+        "styles": "/src/styles/",
+        "assets": "/src/assets/"
+      }
+    },
+    "securityRules": {
+      "noPlainTextPasswords": true,
+      "useEnvironmentVariables": true,
+      "validateAllInputs": true,
+      "sanitizeDatabaseQueries": true,
+      "useJwtForAuth": true,
+      "implementRateLimiting": true,
+      "enableCorsRestrictions": true,
+      "useHelmetMiddleware": true
+    },
+    "apiDesign": {
+      "version": "v1",
+      "basePath": "/api",
+      "restful": true,
+      "useStatusCodes": true,
+      "errorHandling": true,
+      "responseFormat": {
+        "success": {
+          "status": true,
+          "data": {},
+          "message": ""
+        },
+        "error": {
+          "status": false,
+          "error": {},
+          "message": ""
+        }
+      }
+    },
+    "databaseRules": {
+      "useMongoDB": true,
+      "useIndexes": true,
+      "noRawQueries": true,
+      "useAggregation": true,
+      "validateSchema": true
+    },
+    "performanceRules": {
+      "implementCaching": true,
+      "useRedis": true,
+      "lazyLoadImages": true,
+      "codeSplitFrontend": true,
+      "usePagination": true
+    },
+    "testingRequirements": {
+      "unitTests": true,
+      "integrationTests": true,
+      "coverageThreshold": 80,
+      "testEachComponent": true,
+      "testEachAPI": true
+    },
+    "documentationRules": {
+      "commentComplexFunctions": true,
+      "generateSwagger": true,
+      "maintainReadme": true,
+      "changelog": true
+    },
+    "gitRules": {
+      "branches": {
+        "main": "production",
+        "develop": "development",
+        "feature/*": "features",
+        "bugfix/*": "bugfixes",
+        "hotfix/*": "hotfixes"
+      },
+      "commitMessage": "feat: description / fix: description / docs: description"
+    }
+  },
+  "preferredTechnologies": {
+    "frontend": {
+      "framework": "React 18+",
+      "stateManagement": "Redux Toolkit",
+      "routing": "React Router v6",
+      "styling": "CSS Modules / Tailwind CSS",
+      "httpClient": "Axios",
+      "formHandling": "React Hook Form",
+      "validation": "Yup / Zod"
+    },
+    "backend": {
+      "runtime": "Node.js 18+",
+      "framework": "Express.js",
+      "database": "MongoDB with Mongoose",
+      "auth": "JWT with Bcrypt",
+      "validation": "Joi / express-validator",
+      "fileUpload": "Multer / Cloudinary"
+    },
+    "devops": {
+      "hosting": "Vercel (frontend) / Render (backend)",
+      "databaseHost": "MongoDB Atlas",
+      "caching": "Redis",
+      "ci": "GitHub Actions"
+    }
+  },
+  "codingStandards": {
+    "useES6+": true,
+    "useAsyncAwait": true,
+    "preferArrowFunctions": true,
+    "useDestructuring": true,
+    "useTemplateLiterals": true,
+    "useSpreadOperators": true,
+    "preferConstOverLet": true,
+    "useOptionalChaining": true,
+    "useNullishCoalescing": true
+  },
+  "errorHandling": {
+    "globalErrorHandler": true,
+    "specificErrorTypes": true,
+    "logErrors": true,
+    "sendUserFriendlyMessages": true
+  },
+  "environmentVariables": {
+    "requiredBackend": [
+      "PORT",
+      "MONGODB_URI",
+      "JWT_SECRET",
+      "JWT_EXPIRE",
+      "CLOUDINARY_CLOUD_NAME",
+      "CLOUDINARY_API_KEY",
+      "CLOUDINARY_API_SECRET",
+      "SMTP_HOST",
+      "SMTP_PORT",
+      "SMTP_USER",
+      "SMTP_PASS",
+      "FRONTEND_URL",
+      "REDIS_URL"
+    ],
+    "requiredFrontend": [
+      "REACT_APP_API_URL",
+      "REACT_APP_STRIPE_PUBLIC_KEY"
+    ]
+  },
+  "folderSpecificRules": {
+    "/backend/src/models/": {
+      "filePattern": "*.js",
+      "description": "All schemas must have timestamps and indexes",
+      "rules": [
+        "export model as module.exports = mongoose.model('Name', schema)",
+        "include createdAt and updatedAt"
+      ]
+    },
+    "/backend/src/controllers/": {
+      "filePattern": "*.js",
+      "description": "All controllers must use async/await",
+      "rules": [
+        "wrap in try-catch",
+        "return consistent response format",
+        "use status codes appropriately"
+      ]
+    },
+    "/backend/src/routes/": {
+      "filePattern": "*.js",
+      "description": "All routes must have validation",
+      "rules": [
+        "use express.Router()",
+        "include validation middleware",
+        "include auth middleware where needed"
+      ]
+    },
+    "/src/components/": {
+      "filePattern": "*.jsx",
+      "description": "Components must be reusable",
+      "rules": [
+        "use function ComponentName() {}",
+        "export default ComponentName",
+        "use PropTypes or TypeScript for props"
+      ]
+    }
+  }
+}
