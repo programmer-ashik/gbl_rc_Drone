@@ -53,7 +53,7 @@ jobs:
 
             echo "==> Storefront build"
             cd ../frontend
-            npm ci
+            npm install
             npm run build
             chmod -R 755 dist
 
