@@ -26,6 +26,10 @@ jobs:
             set -euo pipefail
             cd /var/www/rcdrone/gbl_rc_Drone
 
+            echo "==> Saving current commit for potential rollback"
+            PREV_COMMIT=$(git rev-parse HEAD)
+            echo "$PREV_COMMIT" > /tmp/rcdrone_prev_commit.txt
+
             echo "==> Syncing repository (preserving server .env files)"
             git fetch origin main
             git reset --hard HEAD
@@ -53,7 +57,7 @@ jobs:
 
             echo "==> Storefront build"
             cd ../frontend
-            npm install
+            npm ci
             npm run build
             chmod -R 755 dist
 
@@ -62,4 +66,31 @@ jobs:
             systemctl reload nginx
 
             echo "==> Deployment complete"
+            rm -f /tmp/rcdrone_prev_commit.txt
             pm2 status rcdrone-backend || true
+
+      - name: Rollback on Failure
+        if: failure()
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          port: ${{ secrets.SSH_PORT }}
+          script: |
+            echo "🚨 Deployment failed! Rolling back to previous stable build..."
+            if [ -f /tmp/rcdrone_prev_commit.txt ]; then
+              ROLLBACK_SHA=$(cat /tmp/rcdrone_prev_commit.txt)
+              cd /var/www/rcdrone/gbl_rc_Drone
+              git reset --hard "$ROLLBACK_SHA"
+
+              cd backend && npm ci --include=dev && npm run build --if-present
+              pm2 restart rcdrone-backend
+
+              cd ../gblrc_admin_dashboard && npm run build && chmod -R 755 dist
+              cd ../frontend && npm run build && chmod -R 755 dist
+
+              nginx -t && systemctl reload nginx
+              rm -f /tmp/rcdrone_prev_commit.txt
+              echo "✅ Restored server to stable commit: $ROLLBACK_SHA"
+            fi
