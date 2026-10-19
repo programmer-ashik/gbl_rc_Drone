@@ -15,15 +15,15 @@ export const MobileHeader = ({
   toggleSidebar,
 }) => {
   return (
-    <div className="flex lg:hidden items-center justify-between w-full py-1">
+    <div className="flex w-full items-center justify-between lg:hidden">
       {/* Left - Sidebar Toggle & Logo */}
       <div className="flex items-center gap-2">
         <Link to={ROUTES.HOME} className="flex items-center gap-2">
-          <div className="w-8 h-8 bg-gradient-to-br from-warning to-warning/70 rounded-lg flex items-center justify-center shadow-sm">
-            <span className="text-text font-bold text-xs">GBL</span>
+          <div className="flex h-7 w-7 items-center justify-center rounded-md bg-gradient-to-br from-warning to-warning/70 shadow-sm">
+            <span className="text-xs font-bold text-white">GBL</span>
           </div>
-          <span className="hidden sm:inline text-base font-bold text-text tracking-tight">
-            GBL
+          <span className="hidden text-[13px] font-semibold tracking-tight text-text sm:inline">
+            GBLrcDrone
           </span>
         </Link>
       </div>
@@ -41,11 +41,11 @@ export const MobileHeader = ({
           aria-expanded={isCategoriesOpen}
           aria-controls="mobile-categories-menu"
           className={cn(
-            "inline-flex items-center justify-center px-2.5 py-2 text-text hover:bg-warning-bg hover:text-warning focus-visible:bg-warning-bg focus-visible:text-warning focus-visible:outline-none transition-colors duration-200 rounded-lg text-xs sm:text-sm font-medium",
+            "inline-flex items-center justify-center rounded-lg px-2 py-1.5 text-[12px] font-medium text-text transition-colors duration-200 hover:bg-warning-bg hover:text-warning focus-visible:bg-warning-bg focus-visible:text-warning focus-visible:outline-none sm:text-[13px]",
             isCategoriesOpen && "bg-warning-bg text-warning",
           )}
         >
-          <Icon name="grid" size={4} className="min-[380px]:mr-1" />
+          <Icon name="grid" size={3.5} className="min-[380px]:mr-1" />
           <span className="hidden min-[380px]:inline">Categories</span>
           <Icon
             name="chevron-down"
@@ -68,13 +68,13 @@ export const MobileHeader = ({
           aria-expanded={isMenuOpen}
           aria-controls="mobile-navigation-menu"
           className={cn(
-            "inline-flex items-center justify-center px-2.5 py-2 text-text hover:bg-warning-bg hover:text-warning focus-visible:bg-warning-bg focus-visible:text-warning focus-visible:outline-none transition-colors duration-200 rounded-lg text-xs sm:text-sm font-medium",
+            "inline-flex items-center justify-center rounded-lg px-2 py-1.5 text-[12px] font-medium text-text transition-colors duration-200 hover:bg-warning-bg hover:text-warning focus-visible:bg-warning-bg focus-visible:text-warning focus-visible:outline-none sm:text-[13px]",
             isMenuOpen && "bg-warning-bg text-warning",
           )}
         >
           <Icon
             name={isMenuOpen ? "close" : "menu"}
-            size={4}
+            size={3.5}
             className="min-[380px]:mr-1"
           />
           <span className="hidden min-[380px]:inline">Menu</span>

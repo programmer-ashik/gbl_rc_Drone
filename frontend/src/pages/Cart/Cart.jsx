@@ -54,23 +54,23 @@ export const Cart = () => {
   };
 
   return (
-    <div className='site-container py-8 md:py-12 bg-background text-text'>
+    <div className='site-container bg-background py-5 text-text md:py-8'>
       {/* Breadcrumb Navigation */}
-      <nav className='flex items-center gap-2 text-xs sm:text-sm text-text-muted mb-6'>
+      <nav className='page-breadcrumb' aria-label='Breadcrumb'>
         <Link to={ROUTES.HOME} className='hover:text-warning transition-colors'>
           Home
         </Link>
         <Icon name='chevron-right' size={3} />
-        <span className='text-text font-medium'>Shopping Cart</span>
+        <span className='font-medium text-text'>Shopping Cart</span>
       </nav>
 
       {/* Page Header */}
-      <div className='flex flex-col sm:flex-row sm:items-center justify-between mb-8 pb-6 border-b border-border gap-4'>
+      <div className='mb-4 flex flex-col justify-between gap-3 border-b border-border pb-4 sm:flex-row sm:items-center'>
         <div>
-          <h1 className='text-2xl sm:text-4xl font-extrabold text-text tracking-tight mb-1'>
+          <h1 className='page-title mb-1'>
             Your Shopping Cart
           </h1>
-          <p className='text-sm text-text-muted'>
+          <p className='text-[13px] text-text-muted'>
             You have{" "}
             <span className='font-bold text-warning'>{totalItems}</span>{" "}
             item(s) in your cart

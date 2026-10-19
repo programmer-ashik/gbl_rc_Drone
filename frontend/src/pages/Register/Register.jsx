@@ -56,10 +56,10 @@ export const Register = () => {
           <div className='inline-flex items-center justify-center bg-warning/10 text-warning p-3 rounded-2xl mb-3 shadow-sm'>
             <Icon name='user-plus' size={6} />
           </div>
-          <h1 className='text-2xl sm:text-3xl font-extrabold text-text tracking-tight mb-2'>
+          <h1 className='page-title mb-2'>
             Create an Account
           </h1>
-          <p className='text-xs sm:text-sm text-text-muted'>
+          <p className='text-[13px] text-text-muted'>
             Join Robotics & Drone Hub to track orders and save your favorite
             maker components.
           </p>

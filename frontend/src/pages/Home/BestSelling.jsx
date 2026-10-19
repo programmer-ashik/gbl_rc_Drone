@@ -23,14 +23,14 @@ export const BestSelling = () => {
 
   return (
     <section className='site-container py-10 md:py-16'>
-      <div className='mb-8 flex flex-col justify-between gap-4 sm:flex-row sm:items-end'>
+      <div className='mb-5 flex flex-col justify-between gap-3 sm:flex-row sm:items-end'>
         <div>
-          <div className='mb-2 inline-flex items-center gap-2 rounded-full bg-warning/10 px-3 py-1 text-xs font-semibold text-warning'>
-            <Icon name='fire' size={4} className='cursor-default' />
+          <div className='mb-1.5 inline-flex items-center gap-2 rounded-full bg-warning/10 px-2.5 py-0.5 text-[12px] font-semibold text-warning'>
+            <Icon name='fire' size={3.5} className='cursor-default' />
             <span>Top Picks{isFetching && !isLoading ? ' · refreshing' : ''}</span>
           </div>
-          <h2 className='text-2xl font-extrabold tracking-tight text-text sm:text-3xl'>Best Selling Products</h2>
-          <p className='mt-1 text-sm text-text-muted'>Popular RC systems, drone parts, electronics, and control gear.</p>
+          <h2 className='page-title'>Best Selling Products</h2>
+          <p className='mt-1 text-[13px] text-text-muted'>Popular RC systems, drone parts, electronics, and control gear.</p>
         </div>
 
         <Link to={`${ROUTES.PRODUCTS}?isBestSeller=true`}>

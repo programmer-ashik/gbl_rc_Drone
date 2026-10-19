@@ -147,8 +147,8 @@ export const Products = ({
   );
 
   return (
-    <div className="site-container bg-background py-8 text-text md:py-12">
-      <nav className="mb-6 flex min-w-0 items-center gap-2 text-xs text-text-muted sm:text-sm" aria-label="Breadcrumb">
+    <div className="site-container bg-background py-5 text-text md:py-8">
+      <nav className="page-breadcrumb" aria-label="Breadcrumb">
         <Link to={ROUTES.HOME} className="shrink-0 transition-colors hover:text-warning">Home</Link>
         <Icon name="chevron-right" size={3} className="shrink-0 cursor-default" />
         <Link to={ROUTES.PRODUCTS} className="shrink-0 transition-colors hover:text-warning">Products</Link>
@@ -166,10 +166,10 @@ export const Products = ({
         )}
       </nav>
 
-      <div className="mb-6 flex flex-col justify-between gap-4 border-b border-border pb-6 md:flex-row md:items-end">
+      <div className="mb-4 flex flex-col justify-between gap-3 border-b border-border pb-4 md:flex-row md:items-end">
         <div className="min-w-0">
-          <h1 className="truncate text-3xl font-extrabold tracking-tight text-text-primary capitalize sm:text-4xl">{heading}</h1>
-          <p className="mt-2 text-sm text-text-muted">
+          <h1 className="page-title truncate capitalize">{heading}</h1>
+          <p className="mt-1 text-[13px] text-text-muted">
             <span className="font-bold text-warning">{result.total || 0}</span> products found
             {!initialLoading && items.length > 0 && (
               <> · showing {(page - 1) * (result.limit || 20) + 1}–{(page - 1) * (result.limit || 20) + items.length}</>
@@ -305,7 +305,7 @@ export const Products = ({
         </section>
 
         <div className="min-w-0 xl:sticky xl:top-[calc(var(--header-h,64px)+1rem)] xl:self-start">
-          <YouMayLike excludeIds={excludeIds} />
+          <YouMayLike excludeIds={excludeIds} category={lockedCategory || filters.category || ""} />
         </div>
       </div>
 

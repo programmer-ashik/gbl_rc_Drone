@@ -21,9 +21,9 @@ export const ComparePage = () => {
 
   if (!items.length) {
     return (
-      <div className="mx-auto max-w-3xl px-4 py-16 text-center">
-        <h1 className="text-2xl font-extrabold">Compare products</h1>
-        <p className="mt-2 text-sm text-text-muted">Select up to 4 products from listings using the compare button.</p>
+      <div className="mx-auto max-w-3xl px-4 py-12 text-center">
+        <h1 className="page-title justify-self-center">Compare products</h1>
+        <p className="mt-2 text-[13px] text-text-muted">Select up to 4 products from listings using the compare button.</p>
         <Link to={ROUTES.PRODUCTS} className="mt-6 inline-block rounded-xl bg-warning px-4 py-2 text-sm font-semibold text-white">
           Browse products
         </Link>
@@ -32,11 +32,11 @@ export const ComparePage = () => {
   }
 
   return (
-    <div className="site-container py-8">
-      <div className="mb-6 flex flex-wrap items-end justify-between gap-3">
+    <div className="site-container py-5 md:py-8">
+      <div className="mb-4 flex flex-wrap items-end justify-between gap-3">
         <div>
-          <h1 className="text-2xl font-extrabold">Product comparison</h1>
-          <p className="text-sm text-text-muted">{items.length} of 4 selected</p>
+          <h1 className="page-title">Product comparison</h1>
+          <p className="text-[13px] text-text-muted">{items.length} of 4 selected</p>
         </div>
         <button type="button" onClick={() => clearCompare()} className="rounded-xl border border-border px-3 py-2 text-sm font-semibold">
           Clear all

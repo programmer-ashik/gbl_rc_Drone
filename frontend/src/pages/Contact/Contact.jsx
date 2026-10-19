@@ -52,28 +52,28 @@ export const Contact = () => {
   };
 
   return (
-    <div className="site-container py-8 md:py-12 bg-background text-text">
+    <div className="site-container bg-background py-5 text-text md:py-8">
       <nav
-        className="flex items-center gap-2 text-xs sm:text-sm text-text-muted mb-6"
+        className="page-breadcrumb"
         aria-label="Breadcrumb"
       >
         <Link to={ROUTES.HOME} className="hover:text-warning transition-colors">
           Home
         </Link>
         <Icon name="chevron-right" size={3} />
-        <span className="text-text font-medium">Contact Us</span>
+        <span className="font-medium text-text">Contact Us</span>
       </nav>
 
-      <section className="relative overflow-hidden rounded-3xl border border-warning/30 bg-gradient-to-br from-warning/15 via-background-secondary to-background p-7 sm:p-10 mb-12">
+      <section className="relative mb-8 overflow-hidden rounded-2xl border border-warning/30 bg-gradient-to-br from-warning/15 via-background-secondary to-background p-5 sm:p-7">
         <div className="relative max-w-3xl">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-warning/10 border border-warning/30 text-warning text-xs font-semibold mb-4">
-            <Icon name="email" size={4} className="cursor-default" />
+          <div className="mb-2 inline-flex items-center gap-2 rounded-full border border-warning/30 bg-warning/10 px-2.5 py-0.5 text-[12px] font-semibold text-warning">
+            <Icon name="email" size={3.5} className="cursor-default" />
             Get in touch
           </div>
-          <h1 className="text-3xl sm:text-5xl font-extrabold text-text-primary tracking-tight mb-4">
+          <h1 className="page-title mb-2">
             Let&apos;s Build the Right Technology Solution
           </h1>
-          <p className="text-sm sm:text-base text-text-secondary leading-relaxed max-w-2xl">
+          <p className="max-w-2xl text-[13px] leading-relaxed text-text-secondary sm:text-sm">
             Contact GBLrcDrone to discuss Audio-Visual, communication,
             surveillance, security, smart infrastructure or industrial
             automation requirements. Our team can support projects from design

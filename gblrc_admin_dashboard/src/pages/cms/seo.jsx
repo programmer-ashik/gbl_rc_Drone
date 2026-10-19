@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { cmsAdminService } from '../../services';
 import { pushToast } from '../../store/slices/toast-slice';
+import { API_CONFIG } from '../../constants/api';
 
 const controlClass = 'rounded-xl border border-border bg-background px-3 py-2 text-sm w-full';
 
@@ -38,9 +39,9 @@ export const CmsSeoPage = () => {
         <div>
           <h1 className='text-2xl font-extrabold text-text-primary'>SEO & URL settings</h1>
           <p className='text-sm text-text-muted'>
-            Sitemap: <a className='text-warning' href={`${import.meta.env.VITE_API_URL || 'http://localhost:5000'}/sitemap.xml`} target='_blank' rel='noreferrer'>/sitemap.xml</a>
+            Sitemap: <a className='text-warning' href={`${API_CONFIG.BASE_URL}/sitemap.xml`} target='_blank' rel='noreferrer'>/sitemap.xml</a>
             {' · '}
-            Robots: <a className='text-warning' href={`${import.meta.env.VITE_API_URL || 'http://localhost:5000'}/robots.txt`} target='_blank' rel='noreferrer'>/robots.txt</a>
+            Robots: <a className='text-warning' href={`${API_CONFIG.BASE_URL}/robots.txt`} target='_blank' rel='noreferrer'>/robots.txt</a>
           </p>
         </div>
         <button type='button' disabled={busy} onClick={save} className='rounded-xl bg-warning px-4 py-2 text-sm font-semibold text-white disabled:opacity-50'>

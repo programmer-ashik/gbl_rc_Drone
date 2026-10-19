@@ -129,8 +129,8 @@ export const ComboBuilder = () => {
   };
 
   return (
-    <div className="site-container py-8 text-text md:py-12">
-      <nav className="mb-6 flex items-center gap-2 text-xs text-text-muted sm:text-sm">
+    <div className="site-container py-5 text-text md:py-8">
+      <nav className="page-breadcrumb" aria-label="Breadcrumb">
         <Link to={ROUTES.HOME} className="hover:text-warning">Home</Link>
         <Icon name="chevron-right" size={3} className="cursor-default" />
         <Link to={ROUTES.COMBO_PACKAGES} className="hover:text-warning">Combos</Link>
@@ -138,9 +138,9 @@ export const ComboBuilder = () => {
         <span className="font-medium text-text">Combo builder</span>
       </nav>
 
-      <div className="mb-8 border-b border-border pb-6">
-        <h1 className="text-3xl font-extrabold tracking-tight text-text-primary sm:text-4xl">FPV Combo Builder</h1>
-        <p className="mt-2 max-w-2xl text-sm text-text-muted">
+      <div className="mb-4 border-b border-border pb-4">
+        <h1 className="page-title">FPV Combo Builder</h1>
+        <p className="mt-1 max-w-2xl text-[13px] text-text-muted">
           Start with a frame, then pick compatible motors, ESCs, propellers, and a battery. Price and estimated flight time update as you build.
         </p>
       </div>

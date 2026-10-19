@@ -1,0 +1,22 @@
+# Dependencies
+node_modules/
+
+# Build
+dist/
+
+# Environment — never commit; VPS copies are preserved by deploy (no git clean)
+.env
+.env.local
+.env.*.local
+.env.*
+!.env.example
+!.env.*.example
+
+# Uploads / logs
+uploads/*
+!uploads/.gitkeep
+logs/
+*.log
+
+# OS
+.DS_Store

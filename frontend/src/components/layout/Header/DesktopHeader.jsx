@@ -7,7 +7,7 @@ import { cn } from "../../../utils/cn";
 import ProductSearchForm from "./ProductSearchForm";
 
 const navItemClasses =
-  "px-3 py-2 text-sm font-medium text-text rounded-lg whitespace-nowrap transition-colors duration-200 hover:bg-warning-bg hover:text-warning focus-visible:bg-warning-bg focus-visible:text-warning focus-visible:outline-none";
+  "px-2.5 py-1.5 text-[13px] font-medium text-text rounded-lg whitespace-nowrap transition-colors duration-200 hover:bg-warning-bg hover:text-warning focus-visible:bg-warning-bg focus-visible:text-warning focus-visible:outline-none";
 
 export const DesktopHeader = ({
   isCategoriesOpen,

@@ -31,9 +31,9 @@ export const CmsPage = ({ slug: slugProp }) => {
   }
 
   return (
-    <div className='site-container max-w-4xl py-8 md:py-12'>
+    <div className='site-container max-w-4xl py-5 md:py-8'>
       <SeoHead title={page.metaTitle || page.title} description={page.metaDescription} />
-      <nav className='mb-6 flex items-center gap-2 text-xs text-text-muted sm:text-sm' aria-label='Breadcrumb'>
+      <nav className='page-breadcrumb' aria-label='Breadcrumb'>
         <Link to={ROUTES.HOME} className='transition-colors hover:text-warning'>
           Home
         </Link>
@@ -41,13 +41,13 @@ export const CmsPage = ({ slug: slugProp }) => {
         <span className='font-medium text-text'>{page.title}</span>
       </nav>
 
-      <div className='mb-8 border-b border-border pb-6'>
-        <div className='mb-3 inline-flex items-center gap-2 rounded-full border border-warning/30 bg-warning/10 px-3 py-1 text-xs font-semibold text-warning'>
+      <div className='mb-5 border-b border-border pb-4'>
+        <div className='mb-2 inline-flex items-center gap-2 rounded-full border border-warning/30 bg-warning/10 px-2.5 py-0.5 text-[12px] font-semibold text-warning'>
           Legal
         </div>
-        <h1 className='text-3xl font-extrabold tracking-tight text-text-primary sm:text-4xl'>{page.title}</h1>
+        <h1 className='page-title'>{page.title}</h1>
         {page.updatedAt ? (
-          <p className='mt-2 text-sm text-text-muted'>
+          <p className='mt-1 text-[13px] text-text-muted'>
             Last updated:{' '}
             <span className='font-semibold text-text'>
               {new Date(page.updatedAt).toLocaleDateString(undefined, {

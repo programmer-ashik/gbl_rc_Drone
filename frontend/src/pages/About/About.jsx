@@ -32,33 +32,33 @@ const SectionHeading = ({ eyebrow, title, description }) => (
 
 export const About = () => {
   return (
-    <div className="site-container py-8 md:py-12 bg-background text-text">
+    <div className="site-container bg-background py-5 text-text md:py-8">
       <nav
-        className="flex items-center gap-2 text-xs sm:text-sm text-text-muted mb-6"
+        className="page-breadcrumb"
         aria-label="Breadcrumb"
       >
         <Link to={ROUTES.HOME} className="hover:text-warning transition-colors">
           Home
         </Link>
         <Icon name="chevron-right" size={3} />
-        <span className="text-text font-medium">About Us</span>
+        <span className="font-medium text-text">About Us</span>
       </nav>
 
-      <section className="relative overflow-hidden bg-gradient-to-br from-warning/15 via-background-secondary to-background border border-warning/30 rounded-3xl p-7 sm:p-10 lg:p-14 mb-14">
+      <section className="relative mb-10 overflow-hidden rounded-2xl border border-warning/30 bg-gradient-to-br from-warning/15 via-background-secondary to-background p-5 sm:p-8">
         <div className="absolute -right-20 -top-24 h-64 w-64 rounded-full bg-warning/10 blur-3xl" />
         <div className="relative max-w-4xl">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-warning text-white text-xs font-bold mb-5 shadow-sm">
-            <Icon name="building" size={4} className="cursor-default" />
+          <div className="mb-3 inline-flex items-center gap-2 rounded-full bg-warning px-3 py-1 text-[12px] font-bold text-white shadow-sm">
+            <Icon name="building" size={3.5} className="cursor-default" />
             Since {COMPANY_INFO.established}
           </div>
-          <h1 className="text-3xl sm:text-5xl lg:text-6xl font-extrabold text-text-primary tracking-tight mb-5">
+          <h1 className="page-title mb-3">
             {COMPANY_INFO.name}
           </h1>
-          <p className="text-lg sm:text-xl font-semibold text-text-primary max-w-3xl mb-4">
+          <p className="mb-2 max-w-3xl text-[15px] font-semibold text-text-primary sm:text-base">
             High-performance Audio-Visual, Communication, Surveillance and
             Integrated Technology Solutions.
           </p>
-          <p className="text-sm sm:text-base text-text-secondary max-w-3xl leading-relaxed">
+          <p className="max-w-3xl text-[13px] leading-relaxed text-text-secondary sm:text-sm">
             We combine cutting-edge technology, innovative design and
             professional engineering expertise to deliver reliable,
             future-ready systems for government organizations, defense

@@ -98,24 +98,24 @@ export const HelpSupport = () => {
   };
 
   return (
-    <div className="site-container bg-background py-8 text-text md:py-12">
-      <nav className="mb-6 flex items-center gap-2 text-xs text-text-muted sm:text-sm" aria-label="Breadcrumb">
+    <div className="site-container bg-background py-5 text-text md:py-8">
+      <nav className="page-breadcrumb" aria-label="Breadcrumb">
         <Link to={ROUTES.HOME} className="transition-colors hover:text-warning">Home</Link>
         <Icon name="chevron-right" size={3} className="cursor-default" />
         <span className="font-medium text-text">Help &amp; Support</span>
       </nav>
 
-      <section className="relative mb-8 overflow-hidden rounded-3xl bg-gradient-to-br from-warning/20 via-background-secondary to-background px-6 py-10 sm:px-10 sm:py-14">
+      <section className="relative mb-6 overflow-hidden rounded-2xl bg-gradient-to-br from-warning/20 via-background-secondary to-background px-5 py-6 sm:px-8 sm:py-8">
         <div className="pointer-events-none absolute -right-20 -top-24 h-72 w-72 rounded-full bg-warning/10 blur-3xl" />
         <div className="relative max-w-3xl">
-          <span className="mb-4 inline-flex items-center gap-2 rounded-full bg-warning/10 px-3 py-1 text-xs font-semibold text-warning">
-            <Icon name="question" size={4} className="cursor-default" />
+          <span className="mb-2 inline-flex items-center gap-2 rounded-full bg-warning/10 px-2.5 py-0.5 text-[12px] font-semibold text-warning">
+            <Icon name="question" size={3.5} className="cursor-default" />
             {COMPANY_INFO.name} Support
           </span>
-          <h1 className="text-3xl font-extrabold tracking-tight text-text-primary sm:text-5xl">
+          <h1 className="page-title">
             How can we help?
           </h1>
-          <p className="mt-4 max-w-2xl text-sm leading-7 text-text-secondary sm:text-base">
+          <p className="mt-2 max-w-2xl text-[13px] leading-6 text-text-secondary sm:text-sm">
             Get assistance with orders, products, payments, accounts, technical issues,
             installation, or after-sales service from {COMPANY_INFO.name}.
           </p>

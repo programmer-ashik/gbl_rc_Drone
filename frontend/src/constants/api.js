@@ -125,8 +125,15 @@ export const API_ENDPOINTS = {
   },
 };
 
+/** Origin only — never include `/api` (endpoints already start with `/api/v1/...`). */
+const normalizeApiOrigin = (value) =>
+  String(value || "https://rcdrone.gblent.com")
+    .trim()
+    .replace(/\/+$/, "")
+    .replace(/\/api$/i, "");
+
 export const API_CONFIG = {
-  BASE_URL: import.meta.env.VITE_API_URL || "http://localhost:5000",
+  BASE_URL: normalizeApiOrigin(import.meta.env.VITE_API_URL),
   TIMEOUT: 30000,
   RETRY_COUNT: 3,
   RETRY_DELAY: 1000,

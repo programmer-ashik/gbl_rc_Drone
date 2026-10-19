@@ -1,4 +1,8 @@
-const API_BASE = import.meta.env.VITE_API_URL || "http://localhost:5000";
+/** Origin only — never include `/api` (asset paths are absolute from the API host). */
+const API_BASE = String(import.meta.env.VITE_API_URL || "https://rcdrone.gblent.com")
+  .trim()
+  .replace(/\/+$/, "")
+  .replace(/\/api$/i, "");
 
 export const resolveAssetUrl = (value) => {
   if (!value) return "";

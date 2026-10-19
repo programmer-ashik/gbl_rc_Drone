@@ -71,17 +71,17 @@ export const OrderDetailPage = () => {
   const stepIndex = Math.max(0, STEPS.indexOf(order.status === 'confirmed' ? 'processing' : order.status));
 
   return (
-    <div className="mx-auto max-w-4xl px-4 py-8 sm:px-6 lg:px-8">
-      <nav className="mb-6 flex items-center gap-2 text-sm text-text-muted">
+    <div className="mx-auto max-w-4xl px-4 py-5 sm:px-6 md:py-8 lg:px-8">
+      <nav className="page-breadcrumb" aria-label="Breadcrumb">
         <Link to={ROUTES.ORDERS}>Orders</Link>
         <Icon name="chevron-right" size={3} />
         <span className="font-medium text-text">{order.orderNumber}</span>
       </nav>
 
-      <div className="mb-6 flex flex-wrap items-start justify-between gap-3">
+      <div className="mb-4 flex flex-wrap items-start justify-between gap-3">
         <div>
-          <h1 className="text-2xl font-extrabold">{order.orderNumber}</h1>
-          <p className="text-sm capitalize text-text-muted">Status: {order.status}</p>
+          <h1 className="page-title">{order.orderNumber}</h1>
+          <p className="text-[13px] capitalize text-text-muted">Status: {order.status}</p>
           {order.estimatedDeliveryDate ? (
             <p className="mt-1 text-sm font-semibold text-warning">Estimated delivery: {formatDate(order.estimatedDeliveryDate)}</p>
           ) : null}

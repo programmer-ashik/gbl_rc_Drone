@@ -11,13 +11,13 @@ import { ROUTES, generateCategoryRoute } from '../../constants';
 import { resolveAssetUrl } from '../../utils/products';
 
 const SectionHeader = ({ title, subtitle, to, linkLabel }) => (
-  <div className='mb-8 flex flex-col justify-between gap-4 sm:flex-row sm:items-end'>
+  <div className='mb-5 flex flex-col justify-between gap-3 sm:flex-row sm:items-end'>
     <div>
-      <h2 className='text-2xl font-extrabold tracking-tight text-text sm:text-3xl'>{title}</h2>
-      {subtitle ? <p className='mt-1 text-sm text-text-muted'>{subtitle}</p> : null}
+      <h2 className='page-title'>{title}</h2>
+      {subtitle ? <p className='mt-1 text-[13px] text-text-muted'>{subtitle}</p> : null}
     </div>
     {to ? (
-      <Link to={to} className='text-sm font-semibold text-warning'>
+      <Link to={to} className='text-[13px] font-semibold text-warning'>
         {linkLabel || 'View all'}
       </Link>
     ) : null}

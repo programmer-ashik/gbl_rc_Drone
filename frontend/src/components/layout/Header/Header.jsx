@@ -178,20 +178,20 @@ export const Header = () => {
     <header className="relative z-[100] bg-background">
       <div className="relative z-[120] border-b border-border/50 bg-background-secondary">
         <div className="site-container">
-          <div className="flex h-14 items-center justify-between sm:h-16">
+          <div className="flex h-10 items-center justify-between sm:h-11">
             <Link
               to={ROUTES.HOME}
               className="flex items-center gap-2 rounded-lg text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-warning"
             >
-              <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-warning to-warning/70">
-                <span className="text-sm font-bold text-text">GBL</span>
+              <div className="flex h-7 w-7 items-center justify-center rounded-md bg-gradient-to-br from-warning to-warning/70">
+                <span className="text-xs font-bold text-white">GBL</span>
               </div>
-              <span className="hidden text-sm font-medium text-text transition-colors hover:text-warning sm:block">
+              <span className="hidden text-[13px] font-semibold text-text transition-colors hover:text-warning sm:block">
                 GBLrcDrone
               </span>
             </Link>
 
-            <div className="hidden items-center gap-2 text-xs text-text-muted md:flex">
+            <div className="hidden items-center gap-2 text-[12px] text-text-muted md:flex">
               <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-success" />
               <span>Free shipping on orders over ৳5000</span>
               <span className="h-3 w-px bg-border" />
@@ -268,7 +268,7 @@ export const Header = () => {
                       }}
                       aria-expanded={isAccountOpen}
                       aria-haspopup="menu"
-                      className="inline-flex max-w-[10rem] cursor-pointer items-center gap-1.5 rounded-lg bg-warning-bg px-2.5 py-1.5 text-xs font-semibold text-warning outline-none transition-colors hover:bg-warning/15 focus-visible:outline-none sm:max-w-[14rem] sm:px-3 sm:py-2"
+                      className="inline-flex max-w-[10rem] cursor-pointer items-center gap-1.5 rounded-lg bg-warning-bg px-2 py-1 text-[12px] font-semibold text-warning outline-none transition-colors hover:bg-warning/15 focus-visible:outline-none sm:max-w-[14rem] sm:px-2.5"
                     >
                       <Icon name="user" size={4} className="shrink-0 cursor-pointer" />
                       <span className="truncate">{firstName}</span>
@@ -286,7 +286,7 @@ export const Header = () => {
                       <Button
                         variant="ghost"
                         size="xs"
-                        className="cursor-pointer rounded-lg bg-background px-2.5 py-1.5 text-xs font-medium text-text transition-colors hover:bg-background-secondary sm:px-3 sm:py-2"
+                        className="cursor-pointer rounded-lg bg-background px-2.5 py-1 text-[12px] font-medium text-text transition-colors hover:bg-background-secondary sm:px-3"
                       >
                         Log In
                       </Button>
@@ -295,7 +295,7 @@ export const Header = () => {
                       <Button
                         variant="solid"
                         size="xs"
-                        className="cursor-pointer rounded-lg bg-warning px-3 py-2 text-xs font-medium text-white transition-colors hover:bg-warning/80"
+                        className="cursor-pointer rounded-lg bg-warning px-2.5 py-1 text-[12px] font-medium text-white transition-colors hover:bg-warning/80"
                       >
                         Sign Up Free
                       </Button>
@@ -314,7 +314,7 @@ export const Header = () => {
           className="site-container relative"
           aria-label="Primary navigation"
         >
-          <div className="flex h-14 items-center justify-between">
+          <div className="flex h-11 items-center justify-between">
             <DesktopHeader
               isCategoriesOpen={isCategoriesOpen}
               setIsCategoriesOpen={setIsCategoriesOpen}

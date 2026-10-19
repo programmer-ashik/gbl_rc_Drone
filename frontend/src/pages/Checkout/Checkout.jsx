@@ -88,9 +88,9 @@ export const Checkout = () => {
   }
 
   return (
-    <div className='site-container py-8 md:py-12 bg-background text-text'>
+    <div className='site-container bg-background py-5 text-text md:py-8'>
       {/* Breadcrumb Navigation */}
-      <nav className='flex items-center gap-2 text-xs sm:text-sm text-text-muted mb-6'>
+      <nav className='page-breadcrumb' aria-label='Breadcrumb'>
         <Link to={ROUTES.HOME} className='hover:text-warning transition-colors'>
           Home
         </Link>
@@ -102,10 +102,10 @@ export const Checkout = () => {
           Cart
         </Link>
         <Icon name='chevron-right' size={3} />
-        <span className='text-text font-medium'>Checkout</span>
+        <span className='font-medium text-text'>Checkout</span>
       </nav>
 
-      <h1 className='text-2xl sm:text-4xl font-extrabold text-text tracking-tight mb-8'>
+      <h1 className='page-title mb-5'>
         Secure Checkout
       </h1>
 

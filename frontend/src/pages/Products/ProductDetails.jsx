@@ -290,7 +290,7 @@ export const ProductDetails = () => {
   }
 
   return (
-    <div className='site-container bg-background py-8 text-text md:py-12'>
+    <div className='site-container bg-background py-5 text-text md:py-8'>
       <SeoHead
         title={seoTitle}
         description={seoDescription}
@@ -299,7 +299,7 @@ export const ProductDetails = () => {
         jsonLd={jsonLd}
       />
       <nav
-        className='mb-8 flex items-center gap-2 text-xs text-text-muted sm:text-sm'
+        className='page-breadcrumb'
         aria-label='Breadcrumb'
       >
         <Link to={ROUTES.HOME} className='transition-colors hover:text-warning'>
@@ -375,11 +375,11 @@ export const ProductDetails = () => {
                   ? ` / ${product.subcategory.replace(/-/g, " ")}`
                   : ""}
               </p>
-              <h1 className='text-xl font-bold tracking-tight text-text-primary sm:text-4xl'>
+              <h1 className='page-title'>
                 {title}
               </h1>
               {product.subtitle && (
-                <p className='mt-3 text-base leading-7 text-text-muted'>
+                <p className='mt-2 text-[13px] leading-6 text-text-muted'>
                   {product.subtitle}
                 </p>
               )}
@@ -407,7 +407,7 @@ export const ProductDetails = () => {
               </div>
 
               <div className='mb-6 flex flex-wrap items-center gap-3'>
-                <span className='text-xl font-extrabold text-warning sm:text-4xl'>
+                <span className='text-xl font-bold text-warning sm:text-2xl'>
                   ৳{price.toLocaleString()}
                 </span>
                 {discountPercentage != null && (

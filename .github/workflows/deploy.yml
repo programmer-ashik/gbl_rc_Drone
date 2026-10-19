@@ -1,0 +1,66 @@
+name: Deploy Production
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: deploy-production
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    name: Deploy to Ubuntu VPS
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy over SSH
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          port: ${{ secrets.SSH_PORT }}
+          script_stop: true
+          script: |
+            set -euo pipefail
+            cd /var/www/rcdrone/gbl_rc_Drone
+
+            echo "==> Syncing repository (preserving server .env files)"
+            git fetch origin main
+            git reset --hard HEAD
+            git pull origin main
+            # Intentionally NOT running `git clean -fd` so local .env files stay intact
+
+            echo "==> Backend install & restart"
+            cd backend
+            npm ci --production=false
+            npm run build --if-present
+            # Prefer existing PM2 process; fall back to npm start (tsx runtime)
+            if pm2 describe rcdrone-backend >/dev/null 2>&1; then
+              pm2 restart rcdrone-backend --update-env
+            elif [ -f dist/server.js ]; then
+              pm2 start dist/server.js --name rcdrone-backend
+            else
+              pm2 start npm --name rcdrone-backend -- start
+            fi
+            pm2 save
+
+            echo "==> Admin dashboard build"
+            cd ../gblrc_admin_dashboard
+            npm ci
+            npm run build
+            chmod -R 755 dist
+
+            echo "==> Storefront build"
+            cd ../frontend
+            npm ci
+            npm run build
+            chmod -R 755 dist
+
+            echo "==> Reload nginx"
+            nginx -t
+            systemctl reload nginx
+
+            echo "==> Deployment complete"
+            pm2 status rcdrone-backend || true

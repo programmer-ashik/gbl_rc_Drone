@@ -22,7 +22,10 @@ export const ICON_OPTIONS = [
 export const resolveAssetUrl = (value) => {
   if (!value) return '';
   if (/^https?:\/\//i.test(value) || value.startsWith('blob:')) return value;
-  const base = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+  const base = String(import.meta.env.VITE_API_URL || 'https://rcdrone.gblent.com')
+    .trim()
+    .replace(/\/+$/, '')
+    .replace(/\/api$/i, '');
   return `${base}${value.startsWith('/') ? value : `/${value}`}`;
 };
 

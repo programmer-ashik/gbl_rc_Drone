@@ -5,25 +5,25 @@ import Icon from "../../components/common/Icon/Icon";
 
 export const PrivacyPolicy = () => {
   return (
-    <div className='max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12 bg-background text-text'>
+    <div className='mx-auto max-w-4xl bg-background px-4 py-5 text-text sm:px-6 md:py-8 lg:px-8'>
       {/* Breadcrumb Navigation */}
-      <nav className='flex items-center gap-2 text-xs sm:text-sm text-text-muted mb-6'>
+      <nav className='page-breadcrumb' aria-label='Breadcrumb'>
         <Link to='/' className='hover:text-warning transition-colors'>
           Home
         </Link>
         <Icon name='chevron-right' size={3} />
-        <span className='text-text font-medium'>Privacy Policy</span>
+        <span className='font-medium text-text'>Privacy Policy</span>
       </nav>
 
       {/* Page Header */}
-      <div className='mb-10 pb-6 border-b border-border'>
-        <div className='inline-flex items-center gap-2 px-3 py-1 rounded-full bg-warning/10 border border-warning/30 text-warning text-xs font-semibold mb-3'>
+      <div className='mb-6 border-b border-border pb-4'>
+        <div className='mb-2 inline-flex items-center gap-2 rounded-full border border-warning/30 bg-warning/10 px-2.5 py-0.5 text-[12px] font-semibold text-warning'>
           <span>🔒 Legal & Security</span>
         </div>
-        <h1 className='text-3xl sm:text-4xl font-extrabold text-text tracking-tight mb-3'>
+        <h1 className='page-title mb-1'>
           Privacy Policy
         </h1>
-        <p className='text-sm text-text-muted'>
+        <p className='text-[13px] text-text-muted'>
           Last updated:{" "}
           <span className='font-semibold text-text'>July 28, 2026</span>
         </p>

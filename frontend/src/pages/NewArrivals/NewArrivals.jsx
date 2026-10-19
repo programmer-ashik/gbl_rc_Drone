@@ -33,20 +33,20 @@ export const NewArrivals = () => {
   }, [products, selectedCategory, sortBy]);
 
   return (
-    <div className="site-container bg-background py-8 text-text md:py-12">
-      <nav className="mb-6 flex items-center gap-2 text-xs text-text-muted sm:text-sm" aria-label="Breadcrumb">
+    <div className="site-container bg-background py-5 text-text md:py-8">
+      <nav className="page-breadcrumb" aria-label="Breadcrumb">
         <Link to={ROUTES.HOME} className="transition-colors hover:text-warning">Home</Link>
         <Icon name="chevron-right" size={3} className="cursor-default" />
         <span className="font-medium text-text">New Arrivals</span>
       </nav>
 
-      <section className="mb-8 rounded-3xl bg-gradient-to-br from-success/15 via-background-secondary to-background p-6 sm:p-9">
-        <div className="mb-3 inline-flex items-center gap-2 rounded-full bg-success/10 px-3 py-1 text-xs font-semibold text-success">
-          <Icon name="lightning" size={4} className="cursor-default" />
+      <section className="mb-5 rounded-2xl bg-gradient-to-br from-success/15 via-background-secondary to-background p-5 sm:p-6">
+        <div className="mb-2 inline-flex items-center gap-2 rounded-full bg-success/10 px-2.5 py-0.5 text-[12px] font-semibold text-success">
+          <Icon name="lightning" size={3.5} className="cursor-default" />
           Fresh Drops
         </div>
-        <h1 className="text-3xl font-extrabold tracking-tight text-text-primary sm:text-4xl">10 New Arrival Products</h1>
-        <p className="mt-2 max-w-2xl text-sm leading-6 text-text-muted">Recently added drone, FPV, battery, motor, radio, RC, and accessory products.</p>
+        <h1 className="page-title">10 New Arrival Products</h1>
+        <p className="mt-1 max-w-2xl text-[13px] leading-5 text-text-muted">Recently added drone, FPV, battery, motor, radio, RC, and accessory products.</p>
       </section>
 
       <div className="mb-8 flex flex-col justify-between gap-4 border-b border-border pb-6 sm:flex-row sm:items-center">

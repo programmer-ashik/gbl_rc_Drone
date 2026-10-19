@@ -48,10 +48,10 @@ export const Login = () => {
           <div className='inline-flex items-center justify-center bg-warning/10 text-warning p-3 rounded-2xl mb-3 shadow-sm'>
             <Icon name='lock' size={6} />
           </div>
-          <h1 className='text-2xl sm:text-3xl font-extrabold text-text tracking-tight mb-2'>
+          <h1 className='page-title mb-2'>
             Welcome Back
           </h1>
-          <p className='text-xs sm:text-sm text-text-muted'>
+          <p className='text-[13px] text-text-muted'>
             Sign in to access your orders, wishlist, and dashboard.
           </p>
         </div>

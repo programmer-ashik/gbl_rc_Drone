@@ -10,9 +10,17 @@
   --warning: #f59e0b;
   --success: #22c55e;
   --danger: #ef4444;
+  --sans: "DM Sans", system-ui, -apple-system, sans-serif;
+  --heading: "Manrope", "DM Sans", system-ui, sans-serif;
   color: var(--text);
   background: var(--background);
-  font-family: Inter, system-ui, sans-serif;
+  font: 15px/1.5 var(--sans);
+  letter-spacing: 0;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--heading);
+  letter-spacing: -0.02em;
 }
 
 .product-editor h1 { font-size: 1.5rem; font-weight: 800; margin: 0.6rem 0 0.4rem; line-height: 1.25; }

@@ -10,7 +10,24 @@ import {
 import { LazyImage } from "../common/Skeleton/Skeleton";
 import Icon from "../common/Icon/Icon";
 
-export const YouMayLike = ({ excludeIds = [], limit = 6 }) => {
+const pickSuggestions = (pool, exclude, limit) => {
+  const seen = new Set();
+  const next = [];
+  for (const product of pool) {
+    const id = String(product?._id || product?.id || "");
+    if (!id || exclude.has(id) || seen.has(id)) continue;
+    seen.add(id);
+    next.push(product);
+    if (next.length >= limit) break;
+  }
+  return next;
+};
+
+export const YouMayLike = ({
+  excludeIds = [],
+  limit = 6,
+  category = "",
+}) => {
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(true);
   const excludeKey = useMemo(
@@ -21,27 +38,63 @@ export const YouMayLike = ({ excludeIds = [], limit = 6 }) => {
   useEffect(() => {
     let active = true;
     setLoading(true);
-    productService
-      .featured()
-      .then((data) => {
-        if (!active) return;
-        const exclude = new Set(excludeIds.map(String));
-        const next = (Array.isArray(data) ? data : [])
-          .filter((item) => !exclude.has(String(item._id || item.id)))
-          .slice(0, limit);
-        setItems(next);
-      })
+
+    const exclude = new Set(excludeIds.map(String));
+    const fetchLimit = Math.max(limit + exclude.size + 8, 12);
+
+    const load = async () => {
+      let pool = [];
+
+      // Prefer real catalog products (same source as the Products grid).
+      try {
+        const filtered = await productService.filter({
+          sort: "popularity",
+          page: 1,
+          limit: fetchLimit,
+          ...(category ? { category } : {}),
+        });
+        pool = Array.isArray(filtered?.items) ? filtered.items : [];
+      } catch {
+        pool = [];
+      }
+
+      // If the category-scoped query is thin, widen to the full catalog.
+      if (pool.length < limit + exclude.size && category) {
+        try {
+          const filtered = await productService.filter({
+            sort: "popularity",
+            page: 1,
+            limit: fetchLimit,
+          });
+          const extra = Array.isArray(filtered?.items) ? filtered.items : [];
+          const seen = new Set(pool.map((item) => String(item._id || item.id)));
+          for (const item of extra) {
+            const id = String(item._id || item.id || "");
+            if (!id || seen.has(id)) continue;
+            seen.add(id);
+            pool.push(item);
+          }
+        } catch {
+          // keep what we have
+        }
+      }
+
+      if (!active) return;
+      setItems(pickSuggestions(pool, exclude, limit));
+    };
+
+    load()
       .catch(() => {
-        if (!active) return;
-        setItems([]);
+        if (active) setItems([]);
       })
       .finally(() => {
         if (active) setLoading(false);
       });
+
     return () => {
       active = false;
     };
-  }, [excludeKey, limit]);
+  }, [excludeKey, limit, category]);
 
   return (
     <aside className="rounded-2xl border border-border bg-background-secondary p-4">

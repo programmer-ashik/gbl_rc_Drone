@@ -21,13 +21,13 @@ export const OrdersPage = () => {
   }, []);
 
   return (
-    <div className="mx-auto max-w-5xl px-4 py-8 sm:px-6 lg:px-8">
-      <nav className="mb-6 flex items-center gap-2 text-sm text-text-muted">
+    <div className="mx-auto max-w-5xl px-4 py-5 sm:px-6 md:py-8 lg:px-8">
+      <nav className="page-breadcrumb" aria-label="Breadcrumb">
         <Link to={ROUTES.HOME}>Home</Link>
         <Icon name="chevron-right" size={3} />
         <span className="font-medium text-text">My orders</span>
       </nav>
-      <h1 className="mb-6 text-2xl font-extrabold">Order tracking</h1>
+      <h1 className="page-title mb-4">Order tracking</h1>
       {loading && <p className="text-sm text-text-muted">Loading…</p>}
       {error && <p className="rounded-xl bg-red-50 p-3 text-sm text-red-600">{error}</p>}
       {!loading && !orders.length && <p className="text-sm text-text-muted">No orders yet.</p>}

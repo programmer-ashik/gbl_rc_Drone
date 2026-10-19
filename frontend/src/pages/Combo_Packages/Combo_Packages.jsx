@@ -52,26 +52,26 @@ export const Combo_Packages = () => {
   }, [packages, selectedCategory, sortBy]);
 
   return (
-    <div className='site-container py-8 md:py-12 bg-background text-text'>
+    <div className='site-container bg-background py-5 text-text md:py-8'>
       {/* Breadcrumb Navigation */}
-      <nav className='flex items-center gap-2 text-xs sm:text-sm text-text-muted mb-6'>
+      <nav className='page-breadcrumb' aria-label='Breadcrumb'>
         <Link to={ROUTES.HOME} className='hover:text-warning transition-colors'>
           Home
         </Link>
         <Icon name='chevron-right' size={3} />
-        <span className='text-text font-medium'>Combo Packages</span>
+        <span className='font-medium text-text'>Combo Packages</span>
       </nav>
 
       {/* Page Header */}
-      <div className='flex flex-col md:flex-row md:items-end justify-between mb-8 pb-6 border-b border-border gap-4'>
+      <div className='mb-4 flex flex-col justify-between gap-3 border-b border-border pb-4 md:flex-row md:items-end'>
         <div>
-          <div className='inline-flex items-center gap-2 px-3 py-1 rounded-full bg-warning/10 border border-warning/30 text-warning text-xs font-semibold mb-2'>
+          <div className='mb-1.5 inline-flex items-center gap-2 rounded-full border border-warning/30 bg-warning/10 px-2.5 py-0.5 text-[12px] font-semibold text-warning'>
             <span>🎁 Value Bundles</span>
           </div>
-          <h1 className='text-2xl sm:text-4xl font-extrabold text-text tracking-tight mb-2'>
+          <h1 className='page-title mb-1'>
             Combo Packages
           </h1>
-          <p className='text-sm text-text-muted'>
+          <p className='text-[13px] text-text-muted'>
             Showing{" "}
             <span className='font-bold text-warning'>
               {filteredPackages.length}
