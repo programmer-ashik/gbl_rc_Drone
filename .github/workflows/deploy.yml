@@ -30,13 +30,12 @@ jobs:
             git fetch origin main
             git reset --hard HEAD
             git pull origin main
-            # Intentionally NOT running `git clean -fd` so local .env files stay intact
 
             echo "==> Backend install & restart"
             cd backend
-            npm ci --production=false
+            npm ci --include=dev
             npm run build --if-present
-            # Prefer existing PM2 process; fall back to npm start (tsx runtime)
+
             if pm2 describe rcdrone-backend >/dev/null 2>&1; then
               pm2 restart rcdrone-backend --update-env
             elif [ -f dist/server.js ]; then
