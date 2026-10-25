@@ -1,15 +1,27 @@
-import mongoose from 'mongoose';
-import { Router } from 'express';
-import { z } from 'zod';
-import { asyncHandler } from '../../../utils/async-handler.js';
-import { envelope } from '../../../core/http/middleware.js';
-import { zodValidate } from '../../../core/http/validate.js';
-import { requireAuth } from '../../../core/auth/middleware.js';
-import { verifyAccessToken } from '../../../core/auth/jwt.js';
-import { BadRequestError, NotFoundError } from '../../../core/http/errors.js';
-import { CartModel } from './cart.model.js';
-import { ProductModel } from '../products/product.model.js';
-import { auditLog } from '../../../core/logging/audit.js';
+import mongoose from "mongoose";
+import { Router } from "express";
+import { z } from "zod";
+import { asyncHandler } from "../../../utils/async-handler.js";
+import { envelope } from "../../../core/http/middleware.js";
+import { zodValidate } from "../../../core/http/validate.js";
+import { requireAuth } from "../../../core/auth/middleware.js";
+import { verifyAccessToken } from "../../../core/auth/jwt.js";
+import { BadRequestError, NotFoundError } from "../../../core/http/errors.js";
+import { CartModel } from "./cart.model.js";
+import { ProductModel } from "../products/product.model.js";
+import { auditLog } from "../../../core/logging/audit.js";
+
+interface IPopulatedProduct {
+  _id: mongoose.Types.ObjectId;
+  title: string;
+  slug: string;
+  image?: string;
+  price: number;
+  discountPrice?: number | null;
+  stock: number;
+  stockStatus: "in_stock" | "low_stock" | "out_of_stock";
+  status: string;
+}
 
 const addSchema = z.object({
   productId: z.string().min(1),
@@ -24,66 +36,73 @@ const sessionSchema = z.object({
   sessionId: z.string().min(1),
 });
 
-const getIdentity = (req: { auth?: { sub: string; organizationId: string | null } | undefined; headers: Record<string, unknown> }) => {
+const getIdentity = (req: {
+  auth?: { sub: string; organizationId: string | null } | undefined;
+  headers: Record<string, unknown>;
+}) => {
   if (req.auth?.sub) {
-    return { userId: req.auth.sub, sessionId: null, organizationId: req.auth.organizationId ?? null };
+    return {
+      userId: req.auth.sub,
+      sessionId: null,
+      organizationId: req.auth.organizationId ?? null,
+    };
   }
-  const sessionId = String(req.headers['x-session-id'] ?? '');
+  const sessionId = String(req.headers["x-session-id"] ?? "");
   if (!sessionId) {
-    throw new BadRequestError('x-session-id header is required for guest cart');
+    throw new BadRequestError("x-session-id header is required for guest cart");
   }
   return { userId: null, sessionId, organizationId: null };
 };
 
-const loadCart = async (identity: { userId: string | null; sessionId: string | null; organizationId: string | null }) => {
+const loadCart = async (identity: {
+  userId: string | null;
+  sessionId: string | null;
+  organizationId: string | null;
+}) => {
   if (identity.userId) {
-    return CartModel.findOne({ userId: identity.userId }).populate('items.productId').lean();
+    return CartModel.findOne({ userId: identity.userId })
+      .populate("items.productId")
+      .lean();
   }
-  return CartModel.findOne({ sessionId: identity.sessionId }).populate('items.productId').lean();
+  return CartModel.findOne({ sessionId: identity.sessionId })
+    .populate("items.productId")
+    .lean();
 };
 
-const toCartResponse = (cart: Awaited<ReturnType<typeof loadCart>>) => {
-  const items = (cart?.items ?? [])
-    .map((item) => {
-      const product = item.productId as unknown as {
-        _id: mongoose.Types.ObjectId;
-        title: string;
-        slug: string;
-        image: string;
-        price: number;
-        discountPrice?: number | null;
-        stock: number;
-        stockStatus: 'in_stock' | 'low_stock' | 'out_of_stock';
-        status: string;
-      } | null;
-      if (!product) return null;
+const toCartResponse = (cart: any) => {
+  const items = ((cart?.items ?? []) as any[])
+    .map((item: any) => {
+      const product = item.productId as IPopulatedProduct | null | undefined;
+      if (!product || !product._id) return null;
       const unitPrice = product.discountPrice ?? product.price;
       return {
         productId: product._id.toString(),
         title: product.title,
         slug: product.slug,
-        image: product.image,
+        image: product.image ?? "",
         price: unitPrice,
         quantity: item.quantity,
         lineTotal: unitPrice * item.quantity,
         availableStock: product.stock,
         stockStatus: product.stockStatus,
-        isAvailable: product.status === 'active' && product.stock >= item.quantity,
+        isAvailable:
+          product.status === "active" && product.stock >= item.quantity,
       };
     })
-    .filter(Boolean);
-  const subtotal = items.reduce((acc, item) => acc + item!.lineTotal, 0);
+    .filter((item): item is NonNullable<typeof item> => Boolean(item));
+
+  const subtotal = items.reduce((acc, item) => acc + item.lineTotal, 0);
   return {
     items,
     subtotal,
-    totalItems: items.reduce((acc, item) => acc + item!.quantity, 0),
+    totalItems: items.reduce((acc, item) => acc + item.quantity, 0),
   };
 };
 
 export const cartRouter = Router();
 
-cartRouter.use((req, _res, next) => {
-  const token = req.headers.authorization?.split(' ')[1];
+cartRouter.use((req: any, _res, next) => {
+  const token = req.headers.authorization?.split(" ")[1];
   if (token) {
     try {
       req.auth = verifyAccessToken(token);
@@ -95,7 +114,7 @@ cartRouter.use((req, _res, next) => {
 });
 
 cartRouter.get(
-  '/',
+  "/",
   asyncHandler(async (req, res) => {
     const identity = getIdentity(req as never);
     const cart = await loadCart(identity);
@@ -104,18 +123,24 @@ cartRouter.get(
 );
 
 cartRouter.post(
-  '/add',
+  "/add",
   zodValidate(addSchema),
   asyncHandler(async (req, res) => {
     const identity = getIdentity(req as never);
     const { productId, quantity } = req.body as z.infer<typeof addSchema>;
-    if (!mongoose.Types.ObjectId.isValid(productId)) throw new BadRequestError('Invalid product id');
+    if (!mongoose.Types.ObjectId.isValid(productId))
+      throw new BadRequestError("Invalid product id");
     const product = await ProductModel.findById(productId);
-    if (!product || product.status !== 'active') throw new NotFoundError('Product not found');
+    if (!product || product.status !== "active")
+      throw new NotFoundError("Product not found");
 
-    const query = identity.userId ? { userId: identity.userId } : { sessionId: identity.sessionId };
+    const query = identity.userId
+      ? { userId: identity.userId }
+      : { sessionId: identity.sessionId };
     const cart = await CartModel.findOne(query);
-    const currentQuantity = cart?.items.find((item) => item.productId.toString() === productId)?.quantity ?? 0;
+    const currentQuantity =
+      cart?.items.find((item) => item.productId.toString() === productId)
+        ?.quantity ?? 0;
     if (product.stock < currentQuantity + quantity) {
       throw new BadRequestError(`Only ${product.stock} item(s) are available`);
     }
@@ -127,17 +152,28 @@ cartRouter.post(
       // Omit null identity fields so partial unique indexes allow many guest carts
       if (identity.userId) createPayload.userId = identity.userId;
       if (identity.sessionId) createPayload.sessionId = identity.sessionId;
-      if (identity.organizationId) createPayload.organizationId = identity.organizationId;
+      if (identity.organizationId)
+        createPayload.organizationId = identity.organizationId;
       await CartModel.create(createPayload);
     } else {
-      const existing = cart.items.find((item) => item.productId.toString() === productId);
+      const existing = cart.items.find(
+        (item) => item.productId.toString() === productId,
+      );
       if (existing) existing.quantity += quantity;
-      else cart.items.push({ productId: new mongoose.Types.ObjectId(productId), quantity });
+      else
+        cart.items.push({
+          productId: new mongoose.Types.ObjectId(productId),
+          quantity,
+        });
       await cart.save();
     }
 
     if (req.auth) {
-      auditLog(req, { action: 'cart.add', targetType: 'Product', targetId: productId });
+      auditLog(req, {
+        action: "cart.add",
+        targetType: "Product",
+        targetId: productId,
+      });
     }
 
     const freshCart = await loadCart(identity);
@@ -146,23 +182,32 @@ cartRouter.post(
 );
 
 cartRouter.put(
-  '/update/:productId',
+  "/update/:productId",
   zodValidate(updateSchema),
   asyncHandler(async (req, res) => {
     const identity = getIdentity(req as never);
-    const { productId } = req.params;
-    if (!mongoose.Types.ObjectId.isValid(productId)) throw new BadRequestError('Invalid product id');
+    const productId = String(req.params.productId);
+    if (!mongoose.Types.ObjectId.isValid(productId))
+      throw new BadRequestError("Invalid product id");
 
-    const query = identity.userId ? { userId: identity.userId } : { sessionId: identity.sessionId };
+    const query = identity.userId
+      ? { userId: identity.userId }
+      : { sessionId: identity.sessionId };
     const cart = await CartModel.findOne(query);
-    if (!cart) throw new NotFoundError('Cart not found');
+    if (!cart) throw new NotFoundError("Cart not found");
 
-    const line = cart.items.find((item) => item.productId.toString() === productId);
-    if (!line) throw new NotFoundError('Cart item not found');
+    const line = cart.items.find(
+      (item) => item.productId.toString() === productId,
+    );
+    if (!line) throw new NotFoundError("Cart item not found");
     const quantity = (req.body as z.infer<typeof updateSchema>).quantity;
-    const product = await ProductModel.findOne({ _id: productId, status: 'active' }).lean();
-    if (!product) throw new NotFoundError('Product not found');
-    if (product.stock < quantity) throw new BadRequestError(`Only ${product.stock} item(s) are available`);
+    const product = (await ProductModel.findOne({
+      _id: productId,
+      status: "active",
+    }).lean()) as any;
+    if (!product) throw new NotFoundError("Product not found");
+    if (product.stock < quantity)
+      throw new BadRequestError(`Only ${product.stock} item(s) are available`);
     line.quantity = quantity;
     await cart.save();
 
@@ -172,16 +217,21 @@ cartRouter.put(
 );
 
 cartRouter.delete(
-  '/remove/:productId',
+  "/remove/:productId",
   asyncHandler(async (req, res) => {
     const identity = getIdentity(req as never);
-    const { productId } = req.params;
-    if (!mongoose.Types.ObjectId.isValid(productId)) throw new BadRequestError('Invalid product id');
+    const productId = String(req.params.productId);
+    if (!mongoose.Types.ObjectId.isValid(productId))
+      throw new BadRequestError("Invalid product id");
 
-    const query = identity.userId ? { userId: identity.userId } : { sessionId: identity.sessionId };
+    const query = identity.userId
+      ? { userId: identity.userId }
+      : { sessionId: identity.sessionId };
     const cart = await CartModel.findOne(query);
-    if (!cart) throw new NotFoundError('Cart not found');
-    cart.items = cart.items.filter((item) => item.productId.toString() !== productId);
+    if (!cart) throw new NotFoundError("Cart not found");
+    cart.items = cart.items.filter(
+      (item) => item.productId.toString() !== productId,
+    );
     await cart.save();
 
     const freshCart = await loadCart(identity);
@@ -190,10 +240,12 @@ cartRouter.delete(
 );
 
 cartRouter.post(
-  '/clear',
+  "/clear",
   asyncHandler(async (req, res) => {
     const identity = getIdentity(req as never);
-    const query = identity.userId ? { userId: identity.userId } : { sessionId: identity.sessionId };
+    const query = identity.userId
+      ? { userId: identity.userId }
+      : { sessionId: identity.sessionId };
     const cart = await CartModel.findOne(query);
     if (cart) {
       cart.items = [];
@@ -204,7 +256,7 @@ cartRouter.post(
 );
 
 cartRouter.post(
-  '/sync',
+  "/sync",
   requireAuth,
   zodValidate(sessionSchema),
   asyncHandler(async (req, res) => {
@@ -216,26 +268,69 @@ cartRouter.post(
     ]);
 
     if (!guestCart) {
-      const fresh = await loadCart({ userId, sessionId: null, organizationId: req.auth!.organizationId });
+      const fresh = await loadCart({
+        userId,
+        sessionId: null,
+        organizationId: req.auth!.organizationId,
+      });
       envelope.ok(res, toCartResponse(fresh));
       return;
     }
 
-    const target = userCart ?? new CartModel({ userId, sessionId: null, organizationId: req.auth!.organizationId, items: [] });
+    const target =
+      userCart ??
+      new CartModel({
+        userId,
+        sessionId: null,
+        organizationId: req.auth!.organizationId,
+        items: [],
+      });
     const productIds = guestCart.items.map((item) => item.productId);
-    const products = await ProductModel.find({ _id: { $in: productIds }, status: 'active' }).select('_id stock').lean();
-    const stockByProduct = new Map(products.map((product) => [product._id.toString(), product.stock]));
+    const products = (await ProductModel.find({
+      _id: { $in: productIds },
+      status: "active",
+    })
+      .select("_id stock")
+      .lean()) as any[];
+    const stockByProduct = new Map(
+      products.map((product) => [
+        product._id.toString(),
+        Number(product.stock),
+      ]),
+    );
     for (const guestItem of guestCart.items) {
-      const availableStock = stockByProduct.get(guestItem.productId.toString()) ?? 0;
+      const availableStock =
+        stockByProduct.get(guestItem.productId.toString()) ?? 0;
       if (availableStock <= 0) continue;
-      const existing = target.items.find((item) => item.productId.toString() === guestItem.productId.toString());
-      if (existing) existing.quantity = Math.min(existing.quantity + guestItem.quantity, availableStock);
-      else target.items.push({ productId: guestItem.productId, quantity: Math.min(guestItem.quantity, availableStock) });
+      const existing = target.items.find(
+        (item) => item.productId.toString() === guestItem.productId.toString(),
+      );
+      if (existing)
+        existing.quantity = Math.min(
+          existing.quantity + guestItem.quantity,
+          availableStock,
+        );
+      else
+        target.items.push({
+          productId: guestItem.productId,
+          quantity: Math.min(guestItem.quantity, availableStock),
+        });
     }
-    await Promise.all([target.save(), CartModel.deleteOne({ _id: guestCart._id })]);
+    await Promise.all([
+      target.save(),
+      CartModel.deleteOne({ _id: guestCart._id }),
+    ]);
 
-    auditLog(req, { action: 'cart.sync', targetType: 'Cart', targetId: target._id.toString() });
-    const fresh = await loadCart({ userId, sessionId: null, organizationId: req.auth!.organizationId });
+    auditLog(req, {
+      action: "cart.sync",
+      targetType: "Cart",
+      targetId: target._id.toString(),
+    });
+    const fresh = await loadCart({
+      userId,
+      sessionId: null,
+      organizationId: req.auth!.organizationId,
+    });
     envelope.ok(res, toCartResponse(fresh));
   }),
 );

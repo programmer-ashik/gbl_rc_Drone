@@ -20,7 +20,6 @@ export const DesktopHeader = ({
   const activeCategory =
     categories.find((category) => category.id === hoveredCategory) ??
     categories[0];
-
   // Show a few top-level categories inline; rest live in the mega menu
   const inlineCategories = categories.slice(0, 5);
 

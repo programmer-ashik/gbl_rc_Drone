@@ -32,8 +32,13 @@ const ACCOUNT_MENU_Z = 9999;
 export const Header = () => {
   const { mode, toggleTheme } = useTheme();
   const { toggleSidebar, isOpen } = useSidebar();
-  const { navCategories, categories, loading: categoriesLoading } = useCatalog();
+  const {
+    navCategories,
+    categories,
+    loading: categoriesLoading,
+  } = useCatalog();
   const menuCategories = navCategories?.length ? navCategories : categories;
+  console.log(menuCategories);
   const { totalItems } = useSelector(selectCart);
   const isAuthenticated = useSelector(selectIsAuthenticated);
   const user = useSelector(selectUser);
@@ -89,7 +94,10 @@ export const Header = () => {
 
   useEffect(() => {
     const handleClickOutside = (event) => {
-      if (navigationRef.current && !navigationRef.current.contains(event.target)) {
+      if (
+        navigationRef.current &&
+        !navigationRef.current.contains(event.target)
+      ) {
         closeNavigation();
       }
       const inButton = accountButtonRef.current?.contains(event.target);
@@ -128,7 +136,7 @@ export const Header = () => {
       {isAccountOpen ? (
         <motion.div
           ref={accountMenuRef}
-          role="menu"
+          role='menu'
           initial={{ opacity: 0, y: -8, scale: 0.98 }}
           animate={{ opacity: 1, y: 0, scale: 1 }}
           exit={{ opacity: 0, y: -6, scale: 0.98 }}
@@ -139,33 +147,39 @@ export const Header = () => {
             right: accountMenuPos.right,
             zIndex: ACCOUNT_MENU_Z,
           }}
-          className="w-48 origin-top-right overflow-hidden rounded-xl border border-border bg-background py-1 shadow-xl shadow-black/15"
+          className='w-48 origin-top-right overflow-hidden rounded-xl border border-border bg-background py-1 shadow-xl shadow-black/15'
         >
-          <div className="border-b border-border px-3 py-2">
-            <p className="truncate text-sm font-semibold text-text-primary">{displayName}</p>
-            {user?.email ? <p className="truncate text-[11px] text-text-muted">{user.email}</p> : null}
+          <div className='border-b border-border px-3 py-2'>
+            <p className='truncate text-sm font-semibold text-text-primary'>
+              {displayName}
+            </p>
+            {user?.email ? (
+              <p className='truncate text-[11px] text-text-muted'>
+                {user.email}
+              </p>
+            ) : null}
           </div>
           <Link
             to={ROUTES.ORDERS}
-            role="menuitem"
+            role='menuitem'
             onClick={() => setIsAccountOpen(false)}
-            className="block px-3 py-2 text-sm text-text hover:bg-background-secondary hover:text-warning"
+            className='block px-3 py-2 text-sm text-text hover:bg-background-secondary hover:text-warning'
           >
             My orders
           </Link>
           <Link
             to={ROUTES.WISHLIST}
-            role="menuitem"
+            role='menuitem'
             onClick={() => setIsAccountOpen(false)}
-            className="block px-3 py-2 text-sm text-text hover:bg-background-secondary hover:text-warning"
+            className='block px-3 py-2 text-sm text-text hover:bg-background-secondary hover:text-warning'
           >
             Wishlist
           </Link>
           <button
-            type="button"
-            role="menuitem"
+            type='button'
+            role='menuitem'
             onClick={handleLogout}
-            className="block w-full cursor-pointer px-3 py-2 text-left text-sm text-text hover:bg-background-secondary hover:text-warning"
+            className='block w-full cursor-pointer px-3 py-2 text-left text-sm text-text hover:bg-background-secondary hover:text-warning'
           >
             Log out
           </button>
@@ -175,127 +189,137 @@ export const Header = () => {
   );
 
   return (
-    <header className="relative z-[100] bg-background">
-      <div className="relative z-[120] border-b border-border/50 bg-background-secondary">
-        <div className="site-container">
-          <div className="flex h-10 items-center justify-between sm:h-11">
+    <header className='relative z-[100] bg-background'>
+      <div className='relative z-[120] border-b border-border/50 bg-background-secondary'>
+        <div className='site-container'>
+          <div className='flex h-10 items-center justify-between sm:h-11'>
             <Link
               to={ROUTES.HOME}
-              className="flex items-center gap-2 rounded-lg text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-warning"
+              className='flex items-center gap-2 rounded-lg text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-warning'
             >
-              <div className="flex h-7 w-7 items-center justify-center rounded-md bg-gradient-to-br from-warning to-warning/70">
-                <span className="text-xs font-bold text-white">GBL</span>
+              <div className='flex h-7 w-7 items-center justify-center rounded-md bg-gradient-to-br from-warning to-warning/70'>
+                <span className='text-xs font-bold text-white'>GBL</span>
               </div>
-              <span className="hidden text-[13px] font-semibold text-text transition-colors hover:text-warning sm:block">
+              <span className='hidden text-[13px] font-semibold text-text transition-colors hover:text-warning sm:block'>
                 GBLrcDrone
               </span>
             </Link>
 
-            <div className="hidden items-center gap-2 text-[12px] text-text-muted md:flex">
-              <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-success" />
+            <div className='hidden items-center gap-2 text-[12px] text-text-muted md:flex'>
+              <span className='h-1.5 w-1.5 animate-pulse rounded-full bg-success' />
               <span>Free shipping on orders over ৳5000</span>
-              <span className="h-3 w-px bg-border" />
-              <span className="font-medium text-warning">New arrivals</span>
+              <span className='h-3 w-px bg-border' />
+              <span className='font-medium text-warning'>New arrivals</span>
             </div>
 
-            <div className="flex items-center gap-1">
+            <div className='flex items-center gap-1'>
               <Button
-                variant="ghost"
-                size="xs"
+                variant='ghost'
+                size='xs'
                 onClick={toggleTheme}
-                aria-label="Toggle theme"
-                className="rounded-lg p-1.5 text-text-muted transition-colors hover:bg-warning-bg hover:text-warning"
+                aria-label='Toggle theme'
+                className='rounded-lg p-1.5 text-text-muted transition-colors hover:bg-warning-bg hover:text-warning'
               >
                 <Icon name={mode === "dark" ? "sun" : "moon"} size={4} />
               </Button>
 
-              <Link to={ROUTES.WISHLIST} aria-label="Wishlist">
+              <Link to={ROUTES.WISHLIST} aria-label='Wishlist'>
                 <Button
-                  variant="ghost"
-                  size="xs"
-                  className="relative rounded-lg p-1.5 text-text-muted transition-colors hover:bg-warning-bg hover:text-warning"
+                  variant='ghost'
+                  size='xs'
+                  className='relative rounded-lg p-1.5 text-text-muted transition-colors hover:bg-warning-bg hover:text-warning'
                 >
-                  <Icon name="heart" size={4} />
+                  <Icon name='heart' size={4} />
                 </Button>
               </Link>
 
-              <Link to={ROUTES.COMPARE} aria-label="Compare">
+              <Link to={ROUTES.COMPARE} aria-label='Compare'>
                 <Button
-                  variant="ghost"
-                  size="xs"
-                  className="rounded-lg p-1.5 text-text-muted transition-colors hover:bg-warning-bg hover:text-warning"
+                  variant='ghost'
+                  size='xs'
+                  className='rounded-lg p-1.5 text-text-muted transition-colors hover:bg-warning-bg hover:text-warning'
                 >
-                  <Icon name="grid" size={4} />
+                  <Icon name='grid' size={4} />
                 </Button>
               </Link>
 
-              <Link to={ROUTES.ORDERS} aria-label="Orders">
+              <Link to={ROUTES.ORDERS} aria-label='Orders'>
                 <Button
-                  variant="ghost"
-                  size="xs"
-                  className="hidden rounded-lg p-1.5 text-text-muted transition-colors hover:bg-warning-bg hover:text-warning sm:inline-flex"
+                  variant='ghost'
+                  size='xs'
+                  className='hidden rounded-lg p-1.5 text-text-muted transition-colors hover:bg-warning-bg hover:text-warning sm:inline-flex'
                 >
-                  <Icon name="shopping-bag" size={4} />
+                  <Icon name='shopping-bag' size={4} />
                 </Button>
               </Link>
 
-              <Link to={ROUTES.CART} aria-label="Shopping cart">
+              <Link to={ROUTES.CART} aria-label='Shopping cart'>
                 <Button
-                  variant="ghost"
-                  size="xs"
-                  className="relative rounded-lg p-1.5 text-text-muted transition-colors hover:bg-warning-bg hover:text-warning"
+                  variant='ghost'
+                  size='xs'
+                  className='relative rounded-lg p-1.5 text-text-muted transition-colors hover:bg-warning-bg hover:text-warning'
                 >
-                  <Icon name="shopping-cart" size={4} />
-                  <span className="absolute -right-0.5 -top-0.5 flex h-4 w-4 items-center justify-center rounded-full bg-warning text-[9px] font-bold text-white shadow-lg shadow-warning/30">
+                  <Icon name='shopping-cart' size={4} />
+                  <span className='absolute -right-0.5 -top-0.5 flex h-4 w-4 items-center justify-center rounded-full bg-warning text-[9px] font-bold text-white shadow-lg shadow-warning/30'>
                     {totalItems > 99 ? "99+" : totalItems}
                   </span>
                 </Button>
               </Link>
 
-              <span className="hidden h-4 w-px bg-border/50 sm:block" />
+              <span className='hidden h-4 w-px bg-border/50 sm:block' />
 
-              <div className="flex items-center gap-1">
+              <div className='flex items-center gap-1'>
                 {isAuthenticated ? (
                   <>
                     <button
                       ref={accountButtonRef}
-                      type="button"
+                      type='button'
                       onClick={() => {
                         setIsAccountOpen((open) => {
-                          if (!open) window.requestAnimationFrame(updateAccountMenuPos);
+                          if (!open)
+                            window.requestAnimationFrame(updateAccountMenuPos);
                           return !open;
                         });
                       }}
                       aria-expanded={isAccountOpen}
-                      aria-haspopup="menu"
-                      className="inline-flex max-w-[10rem] cursor-pointer items-center gap-1.5 rounded-lg bg-warning-bg px-2 py-1 text-[12px] font-semibold text-warning outline-none transition-colors hover:bg-warning/15 focus-visible:outline-none sm:max-w-[14rem] sm:px-2.5"
+                      aria-haspopup='menu'
+                      className='inline-flex max-w-[10rem] cursor-pointer items-center gap-1.5 rounded-lg bg-warning-bg px-2 py-1 text-[12px] font-semibold text-warning outline-none transition-colors hover:bg-warning/15 focus-visible:outline-none sm:max-w-[14rem] sm:px-2.5'
                     >
-                      <Icon name="user" size={4} className="shrink-0 cursor-pointer" />
-                      <span className="truncate">{firstName}</span>
                       <Icon
-                        name="chevron-down"
+                        name='user'
+                        size={4}
+                        className='shrink-0 cursor-pointer'
+                      />
+                      <span className='truncate'>{firstName}</span>
+                      <Icon
+                        name='chevron-down'
                         size={3.5}
                         className={`shrink-0 cursor-pointer transition-transform ${isAccountOpen ? "rotate-180" : ""}`}
                       />
                     </button>
-                    {typeof document !== "undefined" ? createPortal(accountMenu, document.body) : null}
+                    {typeof document !== "undefined"
+                      ? createPortal(accountMenu, document.body)
+                      : null}
                   </>
                 ) : (
-                  <div className="flex items-center gap-1">
+                  <div className='flex items-center gap-1'>
                     <Link to={ROUTES.LOGIN}>
                       <Button
-                        variant="ghost"
-                        size="xs"
-                        className="cursor-pointer rounded-lg bg-background px-2.5 py-1 text-[12px] font-medium text-text transition-colors hover:bg-background-secondary sm:px-3"
+                        variant='ghost'
+                        size='xs'
+                        className='cursor-pointer rounded-lg bg-background px-2.5 py-1 text-[12px] font-medium text-text transition-colors hover:bg-background-secondary sm:px-3'
                       >
                         Log In
                       </Button>
                     </Link>
-                    <Link to={ROUTES.REGISTER} className="hidden sm:inline-flex">
+                    <Link
+                      to={ROUTES.REGISTER}
+                      className='hidden sm:inline-flex'
+                    >
                       <Button
-                        variant="solid"
-                        size="xs"
-                        className="cursor-pointer rounded-lg bg-warning px-2.5 py-1 text-[12px] font-medium text-white transition-colors hover:bg-warning/80"
+                        variant='solid'
+                        size='xs'
+                        className='cursor-pointer rounded-lg bg-warning px-2.5 py-1 text-[12px] font-medium text-white transition-colors hover:bg-warning/80'
                       >
                         Sign Up Free
                       </Button>
@@ -308,13 +332,13 @@ export const Header = () => {
         </div>
       </div>
 
-      <div className="relative z-[110] border-b border-border bg-background">
+      <div className='relative z-[110] border-b border-border bg-background'>
         <nav
           ref={navigationRef}
-          className="site-container relative"
-          aria-label="Primary navigation"
+          className='site-container relative'
+          aria-label='Primary navigation'
         >
-          <div className="flex h-11 items-center justify-between">
+          <div className='flex h-11 items-center justify-between'>
             <DesktopHeader
               isCategoriesOpen={isCategoriesOpen}
               setIsCategoriesOpen={setIsCategoriesOpen}
@@ -337,56 +361,71 @@ export const Header = () => {
           <AnimatePresence initial={false}>
             {isCategoriesOpen && (
               <motion.div
-                id="mobile-categories-menu"
-                role="menu"
+                id='mobile-categories-menu'
+                role='menu'
                 initial={{ height: 0, opacity: 0, y: -10 }}
                 animate={{ height: "auto", opacity: 1, y: 0 }}
                 exit={{ height: 0, opacity: 0, y: -8 }}
-                transition={{ type: "spring", stiffness: 360, damping: 30, mass: 0.75 }}
-                className="absolute inset-x-0 top-full z-[120] origin-top overflow-hidden rounded-b-2xl bg-background shadow-2xl shadow-black/15 lg:hidden"
+                transition={{
+                  type: "spring",
+                  stiffness: 360,
+                  damping: 30,
+                  mass: 0.75,
+                }}
+                className='absolute inset-x-0 top-full z-[120] origin-top overflow-hidden rounded-b-2xl bg-background shadow-2xl shadow-black/15 lg:hidden'
               >
-                <div className="max-h-[calc(100vh-8rem)] overflow-y-auto px-3 pb-4 pt-3 sm:px-5">
-                  <p className="px-3 pb-2 text-xs font-semibold uppercase tracking-[0.16em] text-text-muted">
+                <div className='max-h-[calc(100vh-8rem)] overflow-y-auto px-3 pb-4 pt-3 sm:px-5'>
+                  <p className='px-3 pb-2 text-xs font-semibold uppercase tracking-[0.16em] text-text-muted'>
                     Shop by category
                   </p>
-                  <div className="space-y-1">
+                  <div className='space-y-1'>
                     {categoriesLoading && !menuCategories.length ? (
-                      <p className="px-3 py-4 text-sm text-text-muted">Loading categories…</p>
+                      <p className='px-3 py-4 text-sm text-text-muted'>
+                        Loading categories…
+                      </p>
                     ) : null}
                     {!categoriesLoading && !menuCategories.length ? (
-                      <p className="px-3 py-4 text-sm text-text-muted">No categories yet.</p>
+                      <p className='px-3 py-4 text-sm text-text-muted'>
+                        No categories yet.
+                      </p>
                     ) : null}
                     {menuCategories.map((category) => {
                       const isExpanded = expandedMobileCategory === category.id;
                       const subs = category.subcategories || [];
                       return (
                         <div key={category.id}>
-                          <div className="flex items-center gap-1 rounded-lg transition-colors duration-200 hover:bg-warning-bg focus-within:bg-warning-bg">
+                          <div className='flex items-center gap-1 rounded-lg transition-colors duration-200 hover:bg-warning-bg focus-within:bg-warning-bg'>
                             <Link
                               to={category.path}
-                              role="menuitem"
+                              role='menuitem'
                               onClick={() => setIsCategoriesOpen(false)}
-                              className="flex min-w-0 flex-1 items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-text transition-colors duration-200 hover:text-warning focus-visible:text-warning focus-visible:outline-none"
+                              className='flex min-w-0 flex-1 items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-text transition-colors duration-200 hover:text-warning focus-visible:text-warning focus-visible:outline-none'
                             >
-                              <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-background-secondary">
-                                <Icon name={category.icon || "grid"} size={5} className="cursor-default" />
+                              <span className='flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-background-secondary'>
+                                <Icon
+                                  name={category.icon || "grid"}
+                                  size={5}
+                                  className='cursor-default'
+                                />
                               </span>
-                              <span className="truncate">{category.label}</span>
+                              <span className='truncate'>{category.label}</span>
                             </Link>
                             {subs.length > 0 ? (
                               <button
-                                type="button"
+                                type='button'
                                 aria-label={`${isExpanded ? "Collapse" : "Expand"} ${category.label}`}
                                 aria-expanded={isExpanded}
                                 onClick={() =>
                                   setExpandedMobileCategory((current) =>
-                                    current === category.id ? null : category.id,
+                                    current === category.id
+                                      ? null
+                                      : category.id,
                                   )
                                 }
-                                className="mr-1 flex h-10 w-10 shrink-0 items-center justify-center rounded-lg text-text-muted transition-colors duration-200 hover:bg-warning-bg hover:text-warning focus-visible:bg-warning-bg focus-visible:text-warning focus-visible:outline-none"
+                                className='mr-1 flex h-10 w-10 shrink-0 items-center justify-center rounded-lg text-text-muted transition-colors duration-200 hover:bg-warning-bg hover:text-warning focus-visible:bg-warning-bg focus-visible:text-warning focus-visible:outline-none'
                               >
                                 <Icon
-                                  name="chevron-down"
+                                  name='chevron-down'
                                   size={4}
                                   className={`cursor-default transition-transform duration-200 ${
                                     isExpanded ? "rotate-180" : ""
@@ -401,31 +440,41 @@ export const Header = () => {
                                 initial={{ height: 0, opacity: 0 }}
                                 animate={{ height: "auto", opacity: 1 }}
                                 exit={{ height: 0, opacity: 0 }}
-                                transition={{ type: "spring", stiffness: 420, damping: 32 }}
-                                className="overflow-hidden"
+                                transition={{
+                                  type: "spring",
+                                  stiffness: 420,
+                                  damping: 32,
+                                }}
+                                className='overflow-hidden'
                               >
-                                <div className="space-y-1 pb-2 pl-11 pr-2 pt-1">
+                                <div className='space-y-1 pb-2 pl-11 pr-2 pt-1'>
                                   {subs.map((subcategory) => (
                                     <div key={subcategory.id}>
                                       <Link
                                         to={subcategory.path}
-                                        role="menuitem"
-                                        onClick={() => setIsCategoriesOpen(false)}
-                                        className="block rounded-lg px-3 py-2 text-sm text-text-secondary transition-colors duration-200 hover:bg-warning-bg hover:text-warning focus-visible:bg-warning-bg focus-visible:text-warning focus-visible:outline-none"
+                                        role='menuitem'
+                                        onClick={() =>
+                                          setIsCategoriesOpen(false)
+                                        }
+                                        className='block rounded-lg px-3 py-2 text-sm text-text-secondary transition-colors duration-200 hover:bg-warning-bg hover:text-warning focus-visible:bg-warning-bg focus-visible:text-warning focus-visible:outline-none'
                                       >
                                         {subcategory.label}
                                       </Link>
-                                      {(subcategory.subcategories || []).map((nested) => (
-                                        <Link
-                                          key={nested.id}
-                                          to={nested.path}
-                                          role="menuitem"
-                                          onClick={() => setIsCategoriesOpen(false)}
-                                          className="ml-3 block rounded-lg px-3 py-1.5 text-xs text-text-muted transition-colors duration-200 hover:bg-warning-bg hover:text-warning"
-                                        >
-                                          {nested.label}
-                                        </Link>
-                                      ))}
+                                      {(subcategory.subcategories || []).map(
+                                        (nested) => (
+                                          <Link
+                                            key={nested.id}
+                                            to={nested.path}
+                                            role='menuitem'
+                                            onClick={() =>
+                                              setIsCategoriesOpen(false)
+                                            }
+                                            className='ml-3 block rounded-lg px-3 py-1.5 text-xs text-text-muted transition-colors duration-200 hover:bg-warning-bg hover:text-warning'
+                                          >
+                                            {nested.label}
+                                          </Link>
+                                        ),
+                                      )}
                                     </div>
                                   ))}
                                 </div>
@@ -436,36 +485,39 @@ export const Header = () => {
                       );
                     })}
                   </div>
-                  <div className="mt-3 grid grid-cols-1 gap-1 sm:grid-cols-3">
+                  <div className='mt-3 grid grid-cols-1 gap-1 sm:grid-cols-3'>
                     <Link
                       to={ROUTES.PRODUCTS}
-                      role="menuitem"
+                      role='menuitem'
                       onClick={() => setIsCategoriesOpen(false)}
-                      className="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-warning transition-colors duration-200 hover:bg-warning-bg focus-visible:bg-warning-bg focus-visible:outline-none"
+                      className='flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-warning transition-colors duration-200 hover:bg-warning-bg focus-visible:bg-warning-bg focus-visible:outline-none'
                     >
-                      <Icon name="shopping-bag" size={5} />
+                      <Icon name='shopping-bag' size={5} />
                       All Products
                     </Link>
                     <Link
                       to={ROUTES.NEW_ARRIVALS}
-                      role="menuitem"
+                      role='menuitem'
                       onClick={() => setIsCategoriesOpen(false)}
-                      className="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-warning transition-colors duration-200 hover:bg-warning-bg focus-visible:bg-warning-bg focus-visible:outline-none"
+                      className='flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-warning transition-colors duration-200 hover:bg-warning-bg focus-visible:bg-warning-bg focus-visible:outline-none'
                     >
-                      <Icon name="star" size={5} />
+                      <Icon name='star' size={5} />
                       New Arrivals
                     </Link>
                     <Link
                       to={ROUTES.SALE}
-                      role="menuitem"
+                      role='menuitem'
                       onClick={() => setIsCategoriesOpen(false)}
-                      className="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-warning transition-colors duration-200 hover:bg-warning-bg focus-visible:bg-warning-bg focus-visible:outline-none"
+                      className='flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-warning transition-colors duration-200 hover:bg-warning-bg focus-visible:bg-warning-bg focus-visible:outline-none'
                     >
-                      <Icon name="tag" size={5} />
+                      <Icon name='tag' size={5} />
                       Sale
                     </Link>
                   </div>
-                  <ProductSearchForm className="mobile-search mt-3" onSearch={() => setIsCategoriesOpen(false)} />
+                  <ProductSearchForm
+                    className='mobile-search mt-3'
+                    onSearch={() => setIsCategoriesOpen(false)}
+                  />
                 </div>
               </motion.div>
             )}
@@ -474,25 +526,34 @@ export const Header = () => {
           <AnimatePresence initial={false}>
             {isMenuOpen && (
               <motion.div
-                id="mobile-navigation-menu"
-                role="menu"
+                id='mobile-navigation-menu'
+                role='menu'
                 initial={{ height: 0, opacity: 0, y: -10 }}
                 animate={{ height: "auto", opacity: 1, y: 0 }}
                 exit={{ height: 0, opacity: 0, y: -8 }}
-                transition={{ type: "spring", stiffness: 360, damping: 30, mass: 0.75 }}
-                className="absolute inset-x-0 top-full z-[120] origin-top overflow-hidden rounded-b-2xl bg-background shadow-2xl shadow-black/15 lg:hidden"
+                transition={{
+                  type: "spring",
+                  stiffness: 360,
+                  damping: 30,
+                  mass: 0.75,
+                }}
+                className='absolute inset-x-0 top-full z-[120] origin-top overflow-hidden rounded-b-2xl bg-background shadow-2xl shadow-black/15 lg:hidden'
               >
-                <div className="space-y-1 px-3 pb-4 pt-3 sm:px-5">
+                <div className='space-y-1 px-3 pb-4 pt-3 sm:px-5'>
                   {mobileUtilityLinks.map((item) => (
                     <Link
                       key={item.path}
                       to={item.path}
-                      role="menuitem"
+                      role='menuitem'
                       onClick={() => setIsMenuOpen(false)}
-                      className="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-text transition-colors duration-200 hover:bg-warning-bg hover:text-warning focus-visible:bg-warning-bg focus-visible:text-warning focus-visible:outline-none"
+                      className='flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-text transition-colors duration-200 hover:bg-warning-bg hover:text-warning focus-visible:bg-warning-bg focus-visible:text-warning focus-visible:outline-none'
                     >
-                      <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-background-secondary">
-                        <Icon name={item.icon} size={5} className="cursor-default" />
+                      <span className='flex h-8 w-8 items-center justify-center rounded-lg bg-background-secondary'>
+                        <Icon
+                          name={item.icon}
+                          size={5}
+                          className='cursor-default'
+                        />
                       </span>
                       {item.label}
                     </Link>
@@ -501,12 +562,16 @@ export const Header = () => {
                     <Link
                       key={category.id}
                       to={category.path}
-                      role="menuitem"
+                      role='menuitem'
                       onClick={() => setIsMenuOpen(false)}
-                      className="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-text transition-colors duration-200 hover:bg-warning-bg hover:text-warning focus-visible:bg-warning-bg focus-visible:text-warning focus-visible:outline-none"
+                      className='flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-text transition-colors duration-200 hover:bg-warning-bg hover:text-warning focus-visible:bg-warning-bg focus-visible:text-warning focus-visible:outline-none'
                     >
-                      <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-background-secondary">
-                        <Icon name={category.icon || "grid"} size={5} className="cursor-default" />
+                      <span className='flex h-8 w-8 items-center justify-center rounded-lg bg-background-secondary'>
+                        <Icon
+                          name={category.icon || "grid"}
+                          size={5}
+                          className='cursor-default'
+                        />
                       </span>
                       {category.label}
                     </Link>
@@ -515,26 +580,34 @@ export const Header = () => {
                     <>
                       <Link
                         to={ROUTES.ORDERS}
-                        role="menuitem"
+                        role='menuitem'
                         onClick={() => setIsMenuOpen(false)}
-                        className="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-text transition-colors duration-200 hover:bg-warning-bg hover:text-warning"
+                        className='flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-text transition-colors duration-200 hover:bg-warning-bg hover:text-warning'
                       >
-                        <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-background-secondary">
-                          <Icon name="shopping-bag" size={5} className="cursor-default" />
+                        <span className='flex h-8 w-8 items-center justify-center rounded-lg bg-background-secondary'>
+                          <Icon
+                            name='shopping-bag'
+                            size={5}
+                            className='cursor-default'
+                          />
                         </span>
                         My orders
                       </Link>
                       <button
-                        type="button"
-                        role="menuitem"
+                        type='button'
+                        role='menuitem'
                         onClick={() => {
                           setIsMenuOpen(false);
                           handleLogout();
                         }}
-                        className="flex w-full cursor-pointer items-center gap-3 rounded-lg px-3 py-2.5 text-left text-sm font-medium text-text transition-colors duration-200 hover:bg-warning-bg hover:text-warning"
+                        className='flex w-full cursor-pointer items-center gap-3 rounded-lg px-3 py-2.5 text-left text-sm font-medium text-text transition-colors duration-200 hover:bg-warning-bg hover:text-warning'
                       >
-                        <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-background-secondary">
-                          <Icon name="user" size={5} className="cursor-default" />
+                        <span className='flex h-8 w-8 items-center justify-center rounded-lg bg-background-secondary'>
+                          <Icon
+                            name='user'
+                            size={5}
+                            className='cursor-default'
+                          />
                         </span>
                         Log out ({firstName})
                       </button>
@@ -542,12 +615,12 @@ export const Header = () => {
                   ) : (
                     <Link
                       to={ROUTES.LOGIN}
-                      role="menuitem"
+                      role='menuitem'
                       onClick={() => setIsMenuOpen(false)}
-                      className="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-warning transition-colors duration-200 hover:bg-warning-bg"
+                      className='flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-warning transition-colors duration-200 hover:bg-warning-bg'
                     >
-                      <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-warning-bg">
-                        <Icon name="user" size={5} className="cursor-default" />
+                      <span className='flex h-8 w-8 items-center justify-center rounded-lg bg-warning-bg'>
+                        <Icon name='user' size={5} className='cursor-default' />
                       </span>
                       Log In
                     </Link>
