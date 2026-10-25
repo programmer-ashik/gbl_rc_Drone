@@ -101,7 +101,7 @@ const isDescendant = async (ancestorId: string, candidateParentId: string | null
   while (currentId && !seen.has(currentId)) {
     if (currentId === ancestorId) return true;
     seen.add(currentId);
-    const parent = await CategoryModel.findById(currentId).select('parentId').lean();
+    const parent = await CategoryModel.findById(currentId).select('parentId').lean().exec() as { parentId?: unknown } | null;
     currentId = parent?.parentId ? parent.parentId.toString() : null;
   }
   return false;
