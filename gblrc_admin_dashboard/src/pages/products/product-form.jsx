@@ -152,16 +152,24 @@ export const ProductFormPage = () => {
   };
 
   const uploadPhotos = async (files) => {
+    const incoming = [...(files || [])].filter((file) => file instanceof Blob);
+    if (!incoming.length) return;
     setUploading(true);
     try {
-      const result = await productService.uploadImages(files);
-      const uploaded = (result.items || [{ url: result.url }]).map((item, index) => ({
+      const result = await productService.uploadImages(incoming);
+      const uploaded = (result.items || (result.url ? [{ url: result.url }] : [])).map((item, index) => ({
         url: item.url,
         alt: form.name,
-        isPrimary: form.photos.length === 0 && index === 0,
-        id: item.url,
+        isPrimary: false,
+        id: item.url || `photo-${Date.now()}-${index}`,
       }));
-      setForm((currentForm) => ({ ...currentForm, photos: [...currentForm.photos, ...uploaded] }));
+      if (!uploaded.length) throw new Error('No images were uploaded');
+      setForm((currentForm) => {
+        const photos = [...currentForm.photos, ...uploaded];
+        if (!photos.some((photo) => photo.isPrimary) && photos[0]) photos[0].isPrimary = true;
+        return { ...currentForm, photos };
+      });
+      dispatch(pushToast({ type: 'success', message: `${uploaded.length} image${uploaded.length === 1 ? '' : 's'} uploaded` }));
     } catch (error) {
       dispatch(pushToast({ type: 'error', message: error.message || 'Upload failed' }));
     } finally {
@@ -217,7 +225,13 @@ export const ProductFormPage = () => {
       isBestSeller: form.isBestSeller,
       isNewArrival: form.isNewArrival,
       status: form.isActive ? 'active' : 'draft',
-      photos: form.photos.map((photo, index) => ({ url: photo.url, alt: photo.alt || form.name, isPrimary: Boolean(photo.isPrimary) || index === 0 })),
+      photos: form.photos.map((photo, index) => ({
+        url: photo.url,
+        alt: photo.alt || form.name,
+        isPrimary: form.photos.some((item) => item.isPrimary) ? Boolean(photo.isPrimary) : index === 0,
+      })),
+      image: form.photos.find((photo) => photo.isPrimary)?.url || form.photos[0]?.url || '',
+      images: form.photos.map((photo) => photo.url).filter(Boolean),
       specifications: specsFromPairs(form.specPairs),
       variants: form.productType === 'variable'
         ? form.variants.filter((item) => item.sku.trim()).map((item) => ({
@@ -479,8 +493,8 @@ export const ProductFormPage = () => {
         </section>
 
         <div className='flex gap-2'>
-          <button type='submit' disabled={saving} className='rounded-xl bg-warning px-4 py-2 text-sm font-semibold text-white'>
-            {saving ? 'Saving...' : id ? 'Update product' : 'Create product'}
+          <button type='submit' disabled={saving || uploading} className='rounded-xl bg-warning px-4 py-2 text-sm font-semibold text-white'>
+            {uploading ? 'Uploading images...' : saving ? 'Saving...' : id ? 'Update product' : 'Create product'}
           </button>
           <Link to={ROUTES.PRODUCTS} className='rounded-xl border border-border px-4 py-2 text-sm'>Cancel</Link>
         </div>

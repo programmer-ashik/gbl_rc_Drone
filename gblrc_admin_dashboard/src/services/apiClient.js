@@ -147,8 +147,14 @@ export const apiClient = {
     const auth = readAuth();
     if (auth?.accessToken) headers.Authorization = `Bearer ${auth.accessToken}`;
     const form = new FormData();
-    const files = Array.isArray(file) ? file : [file];
-    files.forEach((item) => form.append(fieldName, item));
+    const files = Array.isArray(file)
+      ? file
+      : file && typeof file.length === "number" && typeof file.item === "function"
+        ? [...file]
+        : [file];
+    files
+      .filter((item) => item instanceof Blob)
+      .forEach((item) => form.append(fieldName, item, item.name || "image"));
 
     const doUpload = async (retried = false) => {
       const response = await fetch(`${API_CONFIG.BASE_URL}${path}`, {

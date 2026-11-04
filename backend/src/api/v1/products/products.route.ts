@@ -30,7 +30,12 @@ import {
   quickEditSchema,
   validateImportRows,
 } from './product-admin.service.js';
-import { productFileUpload, productImageUpload } from './product-upload.js';
+import {
+  collectUploadedImages,
+  productFileUpload,
+  productImageUpload,
+  saveProductImagesAsWebp,
+} from './product-upload.js';
 import { getCachedFeaturedProducts, getCachedNewProducts, getCachedProductDetail } from '../../../core/cache/product-cache.js';
 
 const booleanQuery = z.enum(['true', 'false']).transform((value) => value === 'true');
@@ -344,11 +349,13 @@ productsRouter.post('/import', ...adminOnly, asyncHandler(async (req, res) => {
 productsRouter.post(
   '/upload-image',
   ...adminOnly,
-  handleUpload(productImageUpload.array('images', 12)),
+  handleUpload(productImageUpload.any()),
   asyncHandler(async (req, res) => {
-    const files = ((req as Request & { files?: Array<{ filename: string }> }).files || []);
-    if (!files.length) throw new BadRequestError('Image file is required');
-    const items = files.map((file) => ({ url: `/uploads/products/${file.filename}`, filename: file.filename }));
+    const files = collectUploadedImages(req as Request & {
+      file?: Express.Multer.File;
+      files?: Express.Multer.File[] | Record<string, Express.Multer.File[]>;
+    });
+    const items = await saveProductImagesAsWebp(files);
     auditLog(req, { action: 'product.image-upload', targetType: 'Product', metadata: { count: items.length } });
     envelope.created(res, { url: items[0].url, items });
   }),

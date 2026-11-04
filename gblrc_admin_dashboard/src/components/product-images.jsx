@@ -72,15 +72,16 @@ export const ProductImages = ({ photos, onChange, onUpload, uploading }) => {
       <div
         onDragOver={(event) => event.preventDefault()}
         onDrop={onDrop}
-        onClick={() => inputRef.current?.click()}
+        onClick={() => !uploading && inputRef.current?.click()}
         className='mb-3 cursor-pointer rounded-xl border border-dashed border-border bg-background px-4 py-6 text-center text-sm text-text-muted'
       >
-        {uploading ? 'Uploading...' : 'Drag and drop images, or click to upload'}
+        {uploading ? 'Uploading… converting to WebP' : 'Drag and drop images, or click to upload (saved as WebP)'}
         <input
           ref={inputRef}
           type='file'
-          accept='image/png,image/jpeg,image/webp,image/gif'
+          accept='image/png,image/jpeg,image/webp,image/gif,image/avif,image/bmp,.jpg,.jpeg,.png,.webp,.gif,.avif,.bmp'
           multiple
+          disabled={uploading}
           className='hidden'
           onChange={(event) => {
             const files = [...(event.target.files || [])];
