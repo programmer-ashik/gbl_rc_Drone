@@ -3,9 +3,12 @@ import path from "node:path";
 import multer from "multer";
 import sharp from "sharp";
 import { BadRequestError } from "../../../core/http/errors.js";
-
-const imageDir = path.join(process.cwd(), "uploads", "products");
-const fileDir = path.join(process.cwd(), "uploads", "product-files");
+import { fileURLToPath } from "node:url";
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+const backendRoot = path.resolve(__dirname, "../../../..");
+const imageDir = path.join(backendRoot, "uploads", "products");
+const fileDir = path.join(backendRoot, "uploads", "product-files");
 fs.mkdirSync(imageDir, { recursive: true });
 fs.mkdirSync(fileDir, { recursive: true });
 
@@ -69,10 +72,12 @@ export const saveProductImagesAsWebp = async (files: Express.Multer.File[]) => {
   if (!files.length) throw new BadRequestError("Image file is required");
   const items: Array<{ url: string; filename: string; originalName: string }> =
     [];
+  const createdFiles: string[] = [];
 
   for (const [index, file] of files.entries()) {
     const filename = `${Date.now()}-${index}-${Math.random().toString(36).slice(2, 10)}.webp`;
     const dest = path.join(imageDir, filename);
+
     try {
       await sharp(file.buffer, { failOn: "none", animated: false })
         .rotate()
@@ -84,16 +89,24 @@ export const saveProductImagesAsWebp = async (files: Express.Multer.File[]) => {
         })
         .webp({ quality: 82 })
         .toFile(dest);
+
+      createdFiles.push(dest);
+      items.push({
+        url: `/uploads/products/${filename}`,
+        filename,
+        originalName: file.originalname || filename,
+      });
     } catch {
+      // Clean up orphaned images saved earlier in the same batch
+      await Promise.all(
+        createdFiles.map((filePath) =>
+          fs.promises.unlink(filePath).catch(() => {}),
+        ),
+      );
       throw new BadRequestError(
         `Could not convert ${file.originalname || "image"} to WebP`,
       );
     }
-    items.push({
-      url: `/uploads/products/${filename}`,
-      filename,
-      originalName: file.originalname || filename,
-    });
   }
 
   return items;
