@@ -40,7 +40,7 @@ export const DesktopHeader = ({
   };
 
   return (
-    <div className='relative hidden w-full items-center gap-1 self-stretch lg:flex xl:gap-2'>
+    <div className='relative hidden w-full items-center gap-1 self-stretch lg:flex xl:gap-2 p-4'>
       <Link to={ROUTES.HOME} className={navItemClasses}>
         Home
       </Link>

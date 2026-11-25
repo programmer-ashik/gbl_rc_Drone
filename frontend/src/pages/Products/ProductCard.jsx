@@ -55,7 +55,7 @@ export const ProductCard = ({ product, onQuickView, compact = false }) => {
     <article
       data-product-card
       data-new-arrival={product.isNewArrival ? "true" : "false"}
-      className='group relative flex min-w-0 flex-col overflow-hidden rounded-2xl border border-border bg-background shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-warning/50 hover:shadow-xl'
+      className='group relative flex min-w-0 flex-col overflow-hidden rounded-2xl  bg-background shadow-amber-700 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-warning/50 hover:shadow-amber-700 hover:shadow-md dark:hover:shadow-amber-700/50'
     >
       <div
         className={`relative w-full overflow-hidden bg-background-secondary ${
@@ -126,7 +126,9 @@ export const ProductCard = ({ product, onQuickView, compact = false }) => {
         )}
       </div>
 
-      <div className={`flex min-w-0 flex-grow flex-col ${compact ? "p-2" : "p-1 sm:p-2"}`}>
+      <div
+        className={`flex min-w-0 flex-grow flex-col ${compact ? "p-2" : "p-1 sm:p-2"}`}
+      >
         <div className='mb-1.5 flex min-w-0 items-center justify-between gap-2'>
           <span className='truncate text-[10px] font-semibold uppercase tracking-wide text-text-muted sm:text-[11px]'>
             {product.category?.replace(/-/g, " ")}
@@ -154,7 +156,10 @@ export const ProductCard = ({ product, onQuickView, compact = false }) => {
           </div>
           <span className='truncate text-[11px] font-semibold text-text sm:text-xs'>
             {rating.toFixed(1)}
-            <span className='font-normal text-text-muted'> ({product.reviewsCount || 0})</span>
+            <span className='font-normal text-text-muted'>
+              {" "}
+              ({product.reviewsCount || 0})
+            </span>
           </span>
         </div>
 

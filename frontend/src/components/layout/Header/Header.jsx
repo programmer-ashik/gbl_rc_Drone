@@ -338,7 +338,7 @@ export const Header = () => {
           className='site-container relative'
           aria-label='Primary navigation'
         >
-          <div className='flex h-11 items-center justify-between'>
+          <div className='flex h-14 items-center justify-between'>
             <DesktopHeader
               isCategoriesOpen={isCategoriesOpen}
               setIsCategoriesOpen={setIsCategoriesOpen}

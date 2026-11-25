@@ -12,7 +12,11 @@ import Icon from "../../components/common/Icon/Icon";
 import Button from "../../components/common/Button/Button";
 import { productService } from "../../services/productService";
 import { useCatalog } from "../../contexts/CatalogContext";
-import { readProductFilters, toFilterQuery, toFilterSearchParams } from "../../hooks/useProductFilters";
+import {
+  readProductFilters,
+  toFilterQuery,
+  toFilterSearchParams,
+} from "../../hooks/useProductFilters";
 import { productPath } from "../../utils/products";
 
 const SORT_OPTIONS = [
@@ -38,11 +42,22 @@ export const Products = ({
   const { categories } = useCatalog();
   const [searchParams, setSearchParams] = useSearchParams();
   const filters = useMemo(
-    () => readProductFilters(searchParams, { category: lockedCategory, subCategory: lockedSubCategory }),
+    () =>
+      readProductFilters(searchParams, {
+        category: lockedCategory,
+        subCategory: lockedSubCategory,
+      }),
     [searchParams, lockedCategory, lockedSubCategory],
   );
   const [searchInput, setSearchInput] = useState(filters.q);
-  const [result, setResult] = useState({ items: [], total: 0, totalPages: 1, facets: {}, page: 1, limit: 20 });
+  const [result, setResult] = useState({
+    items: [],
+    total: 0,
+    totalPages: 1,
+    facets: {},
+    page: 1,
+    limit: 20,
+  });
   const [initialLoading, setInitialLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [quickView, setQuickView] = useState(null);
@@ -101,7 +116,12 @@ export const Products = ({
       attributes: {},
       subCategory: lockedSubCategory || "",
     };
-    setSearchParams(toFilterSearchParams(cleaned, { category: lockedCategory, subCategory: lockedSubCategory }));
+    setSearchParams(
+      toFilterSearchParams(cleaned, {
+        category: lockedCategory,
+        subCategory: lockedSubCategory,
+      }),
+    );
   };
 
   const clearFilters = () => {
@@ -130,13 +150,15 @@ export const Products = ({
     applyFilters({ ...filters, q: searchInput.trim(), page: 1 });
   };
 
-  const heading = title || (filters.isFeatured === "true"
-    ? "Featured Products"
-    : filters.isNewArrival === "true"
-      ? "New Arrival Products"
-      : filters.q
-        ? `Results for “${filters.q}”`
-        : "All Products");
+  const heading =
+    title ||
+    (filters.isFeatured === "true"
+      ? "Featured Products"
+      : filters.isNewArrival === "true"
+        ? "New Arrival Products"
+        : filters.q
+          ? `Results for “${filters.q}”`
+          : "All Products");
 
   const page = Number(filters.page || 1);
   const items = result.items || [];
@@ -147,94 +169,138 @@ export const Products = ({
   );
 
   return (
-    <div className="site-container bg-background py-5 text-text md:py-8">
-      <nav className="page-breadcrumb" aria-label="Breadcrumb">
-        <Link to={ROUTES.HOME} className="shrink-0 transition-colors hover:text-warning">Home</Link>
-        <Icon name="chevron-right" size={3} className="shrink-0 cursor-default" />
-        <Link to={ROUTES.PRODUCTS} className="shrink-0 transition-colors hover:text-warning">Products</Link>
+    <div className='site-container bg-background py-5 text-text md:py-8'>
+      <nav className='page-breadcrumb' aria-label='Breadcrumb'>
+        <Link
+          to={ROUTES.HOME}
+          className='shrink-0 transition-colors hover:text-warning'
+        >
+          Home
+        </Link>
+        <Icon
+          name='chevron-right'
+          size={3}
+          className='shrink-0 cursor-default'
+        />
+        <Link
+          to={ROUTES.PRODUCTS}
+          className='shrink-0 transition-colors hover:text-warning'
+        >
+          Products
+        </Link>
         {lockedCategory && (
           <>
-            <Icon name="chevron-right" size={3} className="shrink-0 cursor-default" />
-            <span className="truncate font-medium capitalize text-text">{lockedCategory.replace(/-/g, " ")}</span>
+            <Icon
+              name='chevron-right'
+              size={3}
+              className='shrink-0 cursor-default'
+            />
+            <span className='truncate font-medium capitalize text-text'>
+              {lockedCategory.replace(/-/g, " ")}
+            </span>
           </>
         )}
         {lockedSubCategory && (
           <>
-            <Icon name="chevron-right" size={3} className="shrink-0 cursor-default" />
-            <span className="truncate font-medium capitalize text-text">{lockedSubCategory.replace(/-/g, " ")}</span>
+            <Icon
+              name='chevron-right'
+              size={3}
+              className='shrink-0 cursor-default'
+            />
+            <span className='truncate font-medium capitalize text-text'>
+              {lockedSubCategory.replace(/-/g, " ")}
+            </span>
           </>
         )}
       </nav>
 
-      <div className="mb-4 flex flex-col justify-between gap-3 border-b border-border pb-4 md:flex-row md:items-end">
-        <div className="min-w-0">
-          <h1 className="page-title truncate capitalize">{heading}</h1>
-          <p className="mt-1 text-[13px] text-text-muted">
-            <span className="font-bold text-warning">{result.total || 0}</span> products found
+      <div className='mb-4 flex flex-col justify-between gap-4 border-b border-border pb-4 lg:flex-row lg:items-end'>
+        <div className='min-w-0 shrink-0'>
+          <h1 className='page-title truncate capitalize'>{heading}</h1>
+          <p className='mt-1 text-[13px] text-text-muted'>
+            <span className='font-bold text-warning'>{result.total || 0}</span>{" "}
+            products found
             {!initialLoading && items.length > 0 && (
-              <> · showing {(page - 1) * (result.limit || 20) + 1}–{(page - 1) * (result.limit || 20) + items.length}</>
+              <>
+                {" "}
+                · showing {(page - 1) * (result.limit || 20) + 1}–
+                {(page - 1) * (result.limit || 20) + items.length}
+              </>
             )}
           </p>
         </div>
-        <div className="flex flex-wrap items-center gap-3">
-          <HeadlessSelect
-            label="Sort"
-            value={filters.sort}
-            options={SORT_OPTIONS}
-            onChange={(next) => applyFilters({ ...filters, sort: next, page: 1 })}
-            className="w-52"
-            buttonClassName="bg-background-secondary"
-          />
-          <Button variant="ghost" size="sm" onClick={clearFilters} className="text-warning hover:bg-warning-bg">
-            Clear all
-          </Button>
-        </div>
+        {/* 
+        <div className='flex w-full flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-end lg:w-auto lg:justify-end'>
+          <form
+            onSubmit={submitSearch}
+            className='flex w-full flex-col gap-2 sm:w-auto sm:flex-1 sm:flex-row sm:items-end lg:min-w-[320px]'
+          >
+            {!hideInlineSearch ? (
+              <div className='relative min-w-0 flex-1'>
+                <label
+                  htmlFor='products-search'
+                  className='mb-1 block text-xs font-semibold text-text-muted'
+                >
+                  Search
+                </label>
+                <Icon
+                  name='search'
+                  size={5}
+                  className='pointer-events-none absolute left-3 top-[33px] cursor-default text-text-muted'
+                />
+                <input
+                  id='products-search'
+                  type='search'
+                  value={searchInput}
+                  onChange={(event) => setSearchInput(event.target.value)}
+                  placeholder='Search products...'
+                  aria-label='Search products'
+                  className='h-[42px] w-full rounded-xl border border-border bg-background-secondary py-2.5 pl-10 pr-4 text-sm text-text outline-none transition-colors focus:border-warning focus:ring-2 focus:ring-warning/20 focus:outline-none'
+                />
+              </div>
+            ) : null}
+            {!hideInlineSearch ? (
+              <Button
+                type='submit'
+                variant='solid'
+                size='sm'
+                className='h-[42px] shrink-0 cursor-pointer rounded-xl bg-warning px-5 text-white'
+              >
+                Search
+              </Button>
+            ) : null}
+          </form>
+
+          <div className='flex flex-wrap items-end gap-3'>
+            <HeadlessSelect
+              label='Sort'
+              value={filters.sort}
+              options={SORT_OPTIONS}
+              onChange={(next) =>
+                applyFilters({ ...filters, sort: next, page: 1 })
+              }
+              className='w-52'
+              buttonClassName='bg-background-secondary h-[42px]'
+            />
+
+            <Button
+              variant='ghost'
+              size='sm'
+              onClick={clearFilters}
+              className='h-[42px] text-warning hover:bg-warning-bg'
+            >
+              Clear all
+            </Button>
+          </div>
+        </div> */}
       </div>
 
-      <form
-        onSubmit={submitSearch}
-        className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-end"
-      >
-        {!hideInlineSearch ? (
-          <div className="relative min-w-0 flex-1">
-            <label htmlFor="products-search" className="mb-1 block text-xs font-semibold text-text-muted">
-              Search
-            </label>
-            <Icon name="search" size={5} className="pointer-events-none absolute left-3 top-8 cursor-default text-text-muted" />
-            <input
-              id="products-search"
-              type="search"
-              value={searchInput}
-              onChange={(event) => setSearchInput(event.target.value)}
-              placeholder="Search products..."
-              aria-label="Search products"
-              className="w-full rounded-xl border border-border bg-background-secondary py-2.5 pl-10 pr-4 text-sm text-text outline-none transition-colors focus:border-warning focus:ring-2 focus:ring-warning/20 focus:outline-none"
-            />
-          </div>
-        ) : null}
-        {!lockedCategory ? (
-          <ProductFilters
-            filters={filters}
-            facets={result.facets || {}}
-            categories={categories}
-            lockedCategory={lockedCategory}
-            onChange={applyFilters}
-            className="w-full shrink-0 sm:w-56"
-          />
-        ) : null}
-        {!hideInlineSearch ? (
-          <Button type="submit" variant="solid" size="sm" className="h-[42px] shrink-0 cursor-pointer rounded-xl bg-warning px-5 text-white sm:mb-0">
-            Search
-          </Button>
-        ) : null}
-      </form>
-
-      <div className="grid gap-6 xl:grid-cols-[minmax(0,1fr)_240px]">
-        <section className="min-h-[24rem] min-w-0">
-          <AnimatePresence mode="wait" initial={false}>
+      <div className='grid gap-6 xl:grid-cols-[minmax(0,1fr)_240px]'>
+        <section className='min-h-[24rem] min-w-0'>
+          <AnimatePresence mode='wait' initial={false}>
             {initialLoading ? (
               <motion.div
-                key="skeletons"
+                key='skeletons'
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
@@ -247,28 +313,43 @@ export const Products = ({
               </motion.div>
             ) : showEmpty ? (
               <motion.div
-                key="empty"
+                key='empty'
                 initial={{ opacity: 0, y: 8 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -6 }}
                 transition={gridTransition}
-                className="rounded-2xl bg-background-secondary py-16 text-center"
+                className='rounded-2xl bg-background-secondary py-16 text-center'
               >
-                <Icon name="search" size={8} className="mx-auto mb-3 cursor-default text-warning" />
-                <h2 className="font-bold text-text-primary">No products found</h2>
-                <p className="mt-1 text-sm text-text-muted">{emptyMessage}</p>
-                <Button variant="solid" size="sm" onClick={clearFilters} className="mt-4 bg-warning text-white">Clear filters</Button>
+                <Icon
+                  name='search'
+                  size={8}
+                  className='mx-auto mb-3 cursor-default text-warning'
+                />
+                <h2 className='font-bold text-text-primary'>
+                  No products found
+                </h2>
+                <p className='mt-1 text-sm text-text-muted'>{emptyMessage}</p>
+                <Button
+                  variant='solid'
+                  size='sm'
+                  onClick={clearFilters}
+                  className='mt-4 bg-warning text-white'
+                >
+                  Clear filters
+                </Button>
               </motion.div>
             ) : (
               <motion.div
-                key="results"
+                key='results'
                 initial={{ opacity: 0 }}
                 animate={{ opacity: refreshing ? 0.5 : 1 }}
                 exit={{ opacity: 0 }}
                 transition={gridTransition}
-                className="relative will-change-[opacity]"
+                className='relative will-change-[opacity]'
               >
-                <div className={`${PRODUCT_GRID} ${refreshing ? "pointer-events-none" : ""}`}>
+                <div
+                  className={`${PRODUCT_GRID} ${refreshing ? "pointer-events-none" : ""}`}
+                >
                   {items.map((product) => (
                     <ProductCard
                       key={product._id || product.id}
@@ -278,22 +359,28 @@ export const Products = ({
                     />
                   ))}
                 </div>
-                <div className="mt-8 flex flex-wrap items-center justify-between gap-3 text-sm">
-                  <p className="text-text-muted">Page {result.page} of {result.totalPages}</p>
-                  <div className="flex gap-2">
+                <div className='mt-8 flex flex-wrap items-center justify-between gap-3 text-sm'>
+                  <p className='text-text-muted'>
+                    Page {result.page} of {result.totalPages}
+                  </p>
+                  <div className='flex gap-2'>
                     <button
-                      type="button"
+                      type='button'
                       disabled={page <= 1 || refreshing}
-                      className="rounded-lg border border-border px-3 py-1.5 disabled:opacity-40"
-                      onClick={() => applyFilters({ ...filters, page: page - 1 })}
+                      className='rounded-lg border border-border px-3 py-1.5 disabled:opacity-40'
+                      onClick={() =>
+                        applyFilters({ ...filters, page: page - 1 })
+                      }
                     >
                       Previous
                     </button>
                     <button
-                      type="button"
+                      type='button'
                       disabled={page >= (result.totalPages || 1) || refreshing}
-                      className="rounded-lg border border-border px-3 py-1.5 disabled:opacity-40"
-                      onClick={() => applyFilters({ ...filters, page: page + 1 })}
+                      className='rounded-lg border border-border px-3 py-1.5 disabled:opacity-40'
+                      onClick={() =>
+                        applyFilters({ ...filters, page: page + 1 })
+                      }
                     >
                       Next
                     </button>
@@ -304,12 +391,19 @@ export const Products = ({
           </AnimatePresence>
         </section>
 
-        <div className="min-w-0 xl:sticky xl:top-[calc(var(--header-h,64px)+1rem)] xl:self-start">
-          <YouMayLike excludeIds={excludeIds} category={lockedCategory || filters.category || ""} />
+        <div className='min-w-0 xl:sticky xl:top-[calc(var(--header-h,64px)+1rem)] xl:self-start'>
+          <YouMayLike
+            excludeIds={excludeIds}
+            category={lockedCategory || filters.category || ""}
+          />
         </div>
       </div>
 
-      <QuickViewModal product={quickView} open={Boolean(quickView)} onClose={() => setQuickView(null)} />
+      <QuickViewModal
+        product={quickView}
+        open={Boolean(quickView)}
+        onClose={() => setQuickView(null)}
+      />
     </div>
   );
 };

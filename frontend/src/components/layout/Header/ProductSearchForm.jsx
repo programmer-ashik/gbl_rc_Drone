@@ -93,7 +93,7 @@ export const ProductSearchForm = ({ className = "", onSearch }) => {
         onFocus={() => setOpen(true)}
         placeholder='Search products...'
         autoComplete='off'
-        className='w-full rounded-lg bg-background-secondary py-2.5 pl-10 pr-12 text-sm text-text placeholder-text-muted transition-all focus:outline-none focus:ring-2 focus:ring-warning'
+        className='w-full rounded-lg bg-background-secondary py-2.5 pl-10 pr-12 text-sm text-text placeholder-text-muted transition-all focus:outline-none focus:ring-1 focus:ring-warning'
       />
       <Icon
         name='search'
